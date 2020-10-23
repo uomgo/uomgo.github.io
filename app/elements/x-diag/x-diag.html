@@ -1,0 +1,80 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="x-diag">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+				width: 100%;
+				height: 100%;
+				overflow: auto;
+			}
+			#drawio {
+				@apply(--layout-vertical);
+				@apply(--layout-center-center);
+				height: 100%;
+				width: 100%;
+			}
+
+			svg {
+				height: 100%;
+			}
+
+			img, iron-image {
+				width: 100%;
+				--iron-image-width: 100%;
+			}
+
+		</style>
+
+		<div id="drawio">
+			<firebase-document
+				path="/about"
+				app-name="uomgo"
+				data="{{dataDB}}">
+			</firebase-document>
+
+			<iron-image
+				src="[[dataDB.struct.image]]"
+				fade
+				preload
+				width="100%">
+			</iron-image>
+		</div>
+
+	</template>
+	<script>
+	(function() {
+		'use strict';
+		Polymer({
+			is: 'x-diag',
+			properties: {
+				width: {
+					type: Number,
+					value: 0
+				},
+				height: {
+					type: Number,
+					value: 857
+				},
+
+			},
+			listeners: {
+					'iron-resize': "_resizeHandler"
+			},
+			behaviors: [
+					Polymer.IronResizableBehavior
+			],
+			_resizeHandler: function(e) {
+				this.width = e.target.clientWidth;
+				if ( this.width < 824) {
+				}
+			},
+			ready: function() {
+				var that = this;
+				this.iframe = this.getElementsByTagName('iframe')[0];
+			}
+		});
+	})();
+	</script>
+</dom-module>

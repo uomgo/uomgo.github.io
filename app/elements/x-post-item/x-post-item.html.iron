@@ -1,0 +1,225 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="x-post-item">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+				word-wrap: break-word;
+			}
+
+			paper-card {
+				transition: all 250ms ease-out;
+				--paper-card: {
+					@apply(--layout-vertical);
+					background-color: white;
+					border: 1px solid #ddd;
+					border-radius: 8px;
+					/*margin: 16px 16px 0 16px;*/
+					/*margin: 0 16px 16px;*/
+					margin-bottom: 16px;
+					padding: 16px;
+					text-align: center;
+				};
+				--paper-card-header-text: {
+					text-align: center;
+				};
+				--paper-card-content: {
+					text-align: center;
+				};
+				--paper-card-actions: {
+					text-align: center;
+					padding: 16px 16px 0;
+				};
+			}
+
+			paper-icon-button.edit {
+				/*--paper-icon-button-ink-color: white;*/
+				--paper-icon-button: {
+					width: 24px;
+					height: 24px;
+					background-color: white;
+					color: var(--paper-green-a700);
+					border-radius: 3px;
+					padding: 0px;
+				}
+				--paper-icon-button-hover: {
+					background-color: var(--paper-green-a400);
+					color: black;
+				}
+			}
+
+			paper-icon-button.delete {
+				/*--paper-icon-button-ink-color: black;*/
+				--paper-icon-button: {
+					width: 24px;
+					height: 24px;
+					background-color: white;
+					color: var(--paper-red-500);
+					border-radius: 3px;
+					padding: 0px;
+				}
+				--paper-icon-button-hover: {
+					background-color: var(--paper-red-500);
+					color: white;
+				}
+			}
+
+			paper-card:hover {
+				cursor: pointer;
+				transform: scale(1.01);
+			}
+
+			iron-image {
+				--iron-image-width: 100%;
+				--iron-image-height: 100%;
+				width: 360px;
+				/*max-width: 320px;*/
+				/*display: block;*/
+				height: 240px;
+				padding-right: 16px;
+			}
+
+			.text-box {
+				align-content: center;
+				/*max-height: calc(360px - 32px);*/
+				min-width: 207px;
+				padding: 0;
+				overflow: auto;
+				height: 240px;
+			}
+
+		</style>
+
+		<paper-card tabindex$="[[tabIndex]]"
+								elevation="4"
+								on-tap="_openShowDialog">
+			<div class="heading paper-font-headline">
+				[[post.name]]
+			</div>
+			<div class="card-content layout horizontal center-center wrap">
+				<div class="imageBox">
+
+					<template is="dom-if"
+										if="[[post.image]]">
+						<iron-image class="postImage"
+												src="[[post.image]]"
+												preload
+												sizing="contain"
+												position="center"
+												on-loaded-changed="_onLoadedImage"
+												align="center"></iron-image>
+					</template>
+
+					<template is="dom-if"
+										if="[[post.video_id]]">
+						<iron-image class="video_id"
+												src="https://i3.ytimg.com/vi/[[post.video_id]]/hqdefault.jpg"
+												preload
+												sizing="contain"
+												position="center"
+												on-loaded-changed="_onLoadedImage"
+												align="center"></iron-image>
+					</template>
+
+				</div>
+
+				<template is="dom-if"
+									if="[[post.text]]">
+					<div class="text-box flex layout vertical shadow">
+						<div class="content" style="margin: auto 0;">
+							<template is="juicy-html"
+							content$="[[post.text]]"></template>
+						</div>
+					</div>
+				</template>
+
+			</div>
+			<div class="card-actions layout horizontal center-justified wrap">
+				<div class="layout vertical center-center flex">
+					<moment-js date="[[post.date]]" format="DD.MM.YYYYг."></moment-js>
+				</div>
+				<div hidden$="[[!user]]">
+					<paper-icon-button class="edit"
+														 icon="image:edit"></paper-icon-button>
+					<paper-icon-button class="delete"
+														 icon="delete"></paper-icon-button>
+				</div>
+			</div>
+		</paper-card>
+
+</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 'x-post-item',
+			behaviors: [
+				Polymer.NeonAnimationRunnerBehavior,
+			],
+
+			properties: {
+				user: {
+					type: Object
+				},
+				post: {
+					type: Object
+				},
+				postItem: {
+					type: Object,
+					notify: true
+				},
+				showDialogVisible: {
+					type: Boolean,
+					notify: true
+				},
+				youtubeStyle: {
+					type: String
+				}
+			},
+
+			ready: function() {
+				this.youtubeStyle = "display: inherit !important;";
+				this.youtubeStyle += " background: url(";
+				this.youtubeStyle += app.baseUrl;
+				this.youtubeStyle += "images/youtube.png)";
+				this.youtubeStyle += " 50% 50% no-repeat transparent;";
+				this.youtubeStyle += " background-size: cover;";
+			},
+
+			_youtubeBackground: function() {
+				return app.baseUrl+'images/youtube.png';
+			},
+
+			_youtubeStyle: function (post) {
+				var ret = 'background: transparent url(';
+						ret += 'https://i3.ytimg.com/vi/';
+						ret += post['video-id'];
+						ret += '/hqdefault.jpg';
+						ret += ') no-repeat;background-size: cover;max-width: 480px;max-height: 270px;';
+				return ret;
+			},
+
+			_onLoadedImage: function(e) {
+				if ( e.target.offsetParent ) {
+					if ( e.target.classList.contains("video_id") ) {
+						e.target.$$("#placeholder").style.cssText = this.youtubeStyle;
+					};
+					if ( e.target.offsetParent.querySelector('.juicy-box') ) {
+						// e.target.offsetParent.querySelector('.juicy-box').style.height = e.target.offsetHeight+'px';
+					};
+					// this.$.ironList.fire('iron-resize');
+					// this.$.ironList.notifyResize();
+				};
+			},
+
+			_openShowDialog: function(e) {
+				this.postItem = this.post;
+				this.showDialogVisible = true;
+			}
+
+		});
+	})();
+	</script>
+</dom-module>

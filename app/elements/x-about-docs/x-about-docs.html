@@ -1,0 +1,118 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html" />
+
+<dom-module id="x-about-docs">
+  <template>
+    <style is="custom-style" include="shared-styles">
+      :host {
+        display: block;
+        word-wrap: break-word;
+      }
+      paper-material {
+        background-color: white;
+        border-radius: 0 0 8px 8px;
+      }
+      iron-collapse:focus {
+        outline: none;
+      }
+      .collapse-content {
+        padding: 15px;
+        background-color: white;
+      }
+      .accordeonHeader {
+        padding: 0 8px;
+        cursor: pointer;
+      }
+      .accordeonBox {
+        padding: 8px 0;
+        background-color: var(--paper-blue-grey-50);
+      }
+    </style>
+    <firebase-document
+      id="firebaseDocument"
+      app-name="uomgo"
+      path="/about/docs"
+      data="{{docData}}"
+    >
+    </firebase-document>
+
+    <paper-material elevation="4">
+      <div class="content">
+        <template is="juicy-html" content$="[[docData.text]]"> </template>
+
+        <div class="accordeonBox">
+          <div
+            class="accordeonHeader paper-font-headline"
+            aria-expanded$="[[isExpanded(openedDOIN)]]"
+            aria-controls="DOIN"
+            on-tap="toggle"
+            data-args="#DOIN"
+          >
+            Приказы министерства образования и науки Кузбасса
+          </div>
+          <iron-collapse id="DOIN" tabindex="0" opened="{{openedDOIN}}">
+            <div class="collapse-content shadow">
+              <template is="juicy-html" content$="[[docData.DOIN.text]]">
+              </template>
+            </div>
+          </iron-collapse>
+        </div>
+
+        <div class="accordeonBox">
+          <div
+            class="accordeonHeader paper-font-headline"
+            aria-expanded$="[[isExpanded(openedAdminMGO)]]"
+            aria-controls="adminMGO"
+            on-tap="toggle"
+            data-args="#adminMGO"
+          >
+            Постановления администрации МГО
+          </div>
+          <iron-collapse id="adminMGO" tabindex="0" opened="{{openedAdminMGO}}">
+            <div class="collapse-content shadow">
+              <template is="juicy-html" content$="[[docData.adminMGO.text]]">
+              </template>
+            </div>
+          </iron-collapse>
+        </div>
+
+        <div class="accordeonBox">
+          <div
+            class="accordeonHeader paper-font-headline"
+            aria-expanded$="[[isExpanded(openedAdminPrograms)]]"
+            aria-controls="programs"
+            on-tap="toggle"
+            data-args="#programs"
+          >
+            Программы
+          </div>
+          <iron-collapse
+            id="programs"
+            tabindex="0"
+            opened="{{openedAdminPrograms}}"
+          >
+            <div class="collapse-content shadow">
+              <template is="juicy-html" content$="[[docData.programs.text]]">
+              </template>
+            </div>
+          </iron-collapse>
+        </div>
+      </div>
+    </paper-material>
+  </template>
+  <script>
+    (function () {
+      "use strict";
+
+      Polymer({
+        is: "x-about-docs",
+        properties: {},
+        toggle: function (e) {
+          document.querySelector(e.target.getAttribute("data-args")).toggle();
+        },
+        isExpanded: function (opened) {
+          return String(opened);
+        },
+      });
+    })();
+  </script>
+</dom-module>

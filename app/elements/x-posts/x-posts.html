@@ -1,0 +1,150 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="x-posts">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+			}
+			#grid {
+				@apply(--layout-wrap);
+				@apply(--layout-horizontal);
+				@apply(--layout-center-justified);
+			}
+			x-post-item {
+				margin: 0 4px 16px;
+			}
+			.postItem {
+				@apply(--layout-wrap);
+				@apply(--layout-horizontal);
+				@apply(--layout-center-justified);
+			}
+			@media all and (max-width: 601px) {
+				x-post-item {
+					margin: 0 0 16px;
+				}
+			}
+		</style>
+
+		<firebase-query id="firebaseQueryPosts"
+			path="/posts"
+			app-name="uomgo"
+			order-by-child="date"
+			start-at="{{startAt}}"
+			end-at="{{endAt}}"
+			limit-to-first="[[limitToFirst]]"
+			limit-to-last="[[limitToLast]]"
+			order-by-child="date"
+			data="{{dataDB}}">
+		</firebase-query>
+
+		<array-filter
+			items="[[dataDB]]"
+			filtered="{{filtered}}"
+			sort="_computeSort"
+			filter="_filter">
+		</array-filter>
+
+		<div id="grid">
+			<template id="domRepeat"
+				is="dom-repeat"
+				items="[[filtered]]"
+				as="post"
+				target-framerate="60"
+				on-dom-change="_renderRepeat">
+					<div class="postItem">
+						<template  is="dom-if" if="[[post.enabled]]">
+							<x-post-item post="[[post]]"></x-post-item>
+						</template>
+					</div>
+			</template>
+		</div>
+
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+			Polymer({
+				is: 'x-posts',
+				behaviors: [
+					Polymer.NeonAnimationRunnerBehavior
+				],
+				properties: {
+					animationConfig: {
+						value: function() {
+							return {
+								'entry': [{
+									name: 'cascaded-animation',
+									animation: 'scale-up-animation',
+									node: this,
+									nodeDelay: 50,
+									timing: {
+										duration: 150,
+										delay: 0
+									}
+								}]
+							};
+						}
+					},
+					// limitToLast: {
+					// 	type: Number,
+					// 	notify: true
+					// },
+					// limitToFirst: {
+					// 	type: Number,
+					// 	notify: true,
+					// },
+					// startAt: {
+					// 	type: String,
+					// 	notify: true
+					// },
+					// endAt: {
+					// 	type: String,
+					// 	notify: true,
+					// }
+				},
+
+				ready: function() {
+				},
+
+				_computeSort: function(a, b) {
+					if (a.date == b.date) {
+						return 0;
+					}
+					return a.date > b.date ? -1 : 1;
+				},
+
+				_filter: function(item) {
+					var todayDate = new Date();
+					var todayMM = todayDate.getMonth()+1; //January is 0!
+					var todayYYYY = todayDate.getFullYear();
+					var itemDate = new Date(item.date);
+					var itemMM = itemDate.getMonth()+1;
+					var itemYYYY = itemDate.getFullYear();
+					var diffYYYY = todayYYYY - itemYYYY;
+					var diffMM = todayMM - itemMM;
+
+					// if ( (todayYYYY - itemYYYY === 1) && (itemMM > 8)  ) {
+					// 	return true;
+					// };
+					// if ( (todayYYYY - itemYYYY === 0) && (itemMM < 6)  ) {
+					// 	return true;
+					// };
+
+					if ( diffYYYY <= 1 ) {
+						return true;
+					};
+
+				},
+
+				_renderRepeat: function () {
+					var xPostItems = Polymer.dom(this.root).querySelectorAll('x-post-item');
+					this.animationConfig['entry'][0].nodes = Array.prototype.slice.call(xPostItems);
+					this.playAnimation('entry');
+				},
+
+			});
+	})();
+	</script>
+</dom-module>

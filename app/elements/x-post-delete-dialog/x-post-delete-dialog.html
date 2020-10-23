@@ -1,0 +1,53 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="x-post-delete-dialog">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+			}
+			paper-dialog {
+				border-radius: 8px;
+				/*margin: 0 !important;*/
+			}
+			iron-autogrow-textarea {
+					border: none;
+					max-height: 80px;
+					width: 100%;
+					margin: 24px 0 0 0 !important;
+					padding: 0 !important;
+			}
+		</style>
+		<paper-dialog id="deletePostDialog"
+			modal
+			entry-animation="scale-up-animation"
+			exit-animation="fade-out-animation">
+
+				<h2 class="text-align-center">Удаление</h2>
+				<div class="content text-align-center">
+					<h3>Запись будет безвозвратно удалена.</h3>
+					<h2 style="color: red;">Уверены?</h2>
+				</div>
+				<div class="buttons">
+					<paper-button dialog-dismiss>
+						Отмена
+					</paper-button>
+					<paper-button
+						dialog-confirm
+						autofocus on-tap="_deletePost">
+							Да
+					</paper-button>
+				</div>
+
+		</paper-dialog>
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 'x-post-delete-dialog'
+		});
+	})();
+	</script>
+</dom-module>

@@ -1,0 +1,268 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="x-drawer-menu">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+				word-wrap: break-word;
+				/*word-break: break-all;*/
+			}
+
+			#head {
+				padding: 16px;
+				background-color: var(--primary-color);
+				border: 2px solid #267ED5;
+				background: linear-gradient(#185694, #106cc8);
+				background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #185694), color-stop(1, #106cc8));
+				background: -webkit-linear-gradient(top, #185694 0%, #106cc8 100%);
+				background: -moz-linear-gradient(top, #185694 0%, #106cc8 100%);
+				background: linear-gradient(top, #185694 0%, #106cc8 100%);
+				flex-shrink: 0;
+			}
+
+			paper-menu {
+				--paper-menu: {
+					padding: 0px;
+				};
+				--paper-menu-selected-item: {
+					color: var(--primary-color);
+				};
+
+				--paper-menu-focused-item-after: {
+					background: var(--primary-color);
+				};
+			}
+
+			iron-icon {
+				/*margin-right: 16px;*/
+				opacity: 0.54;
+			}
+/*
+			iron-icon::shadow svg {
+				width: 24px !important;
+			}
+*/
+			paper-item {
+				--paper-item: {
+					cursor: pointer;
+				};
+			}
+
+			paper-icon-item {
+				padding: 4px 8px !important;
+				--paper-item: {
+					cursor: pointer;
+				};
+			}
+
+			.menu-content {
+				background-color: var(--paper-grey-50);
+				border: 1px solid #267ED5;
+				border-left: none;
+				border-right: none;
+			}
+
+			.menu-items {
+				padding: 4px 16px;
+			}
+			.submenu-items {
+				padding: 4px 16px 4px 40px;
+			}
+			img, iron-image {
+				width: 100%;
+				--iron-image-width: 100%;
+			}
+			paper-tooltip {
+				--paper-tooltip: {
+					text-align: center;
+				};
+			}
+		</style>
+
+		<firebase-auth id="auth"
+			user="{{user}}"
+			provider="google"
+			app-name="uomgo"
+			on-error="showError">
+		</firebase-auth>
+
+		<div id="head" class="layout horizontal center-center fit">
+			<iron-image
+				src="https://firebasestorage.googleapis.com/v0/b/uomgo-fab6c.appspot.com/o/logo1.png?alt=media&token=6f57274a-1993-4dfd-8638-a8d782a2121c">
+			</iron-image>
+		</div>
+
+		<paper-tooltip
+		  for="head"
+		  position="bottom"
+		  offset="0">
+			  Управление образованием Мысковского городского округа
+		</paper-tooltip>
+
+		<paper-menu id="mainMenu"
+			attr-for-selected="data-route"
+			selected="{{data.page}}"
+			selectable="paper-icon-item">
+
+				<paper-icon-item data-route="main">
+					<iron-icon icon="home" item-icon></iron-icon>
+					<paper-item-body>
+						Главная
+					</paper-item-body>
+				</paper-icon-item>
+
+				<paper-icon-item data-route="about">
+					<iron-icon icon="info" item-icon></iron-icon>
+					<paper-item-body>
+						Об управлении
+					</paper-item-body>
+				</paper-icon-item>
+
+				<paper-icon-item data-route="virt">
+					<iron-icon icon="mail" item-icon></iron-icon>
+					<paper-item-body>
+						Обращения граждан
+					</paper-item-body>
+				</paper-icon-item>
+
+				<paper-submenu>
+					<paper-icon-item class="menu-trigger menu-items">
+						<iron-icon icon="folder" item-icon></iron-icon>
+						<paper-item-body>
+							Отделы
+						</paper-item-body>
+					</paper-icon-item>
+
+					<paper-menu class="menu-content"
+											attr-for-selected="data-route"
+											selected='{{data.page}}'>
+
+						<paper-item class="submenu-items" data-route="inspect">
+							<span>Отдел инспектирования качества образования</span>
+						</paper-item>
+
+						<paper-item class="submenu-items" data-route="preschool">
+							<span>Отдел дошкольного образования</span>
+						</paper-item>
+
+						<paper-item class="submenu-items" data-route="sport">
+							<span>Физкультурно - оздоровительный отдел</span>
+						</paper-item>
+
+						<paper-item class="submenu-items" data-route="upbringe">
+							<span>Отдел воспитательной работы</span>
+						</paper-item>
+
+						<paper-item class="submenu-items" data-route="tutelage">
+							<span>Отдел опеки и попечительства</span>
+						</paper-item>
+
+						<paper-item class="submenu-items" data-route="legal">
+							<span>Организационно - правовой отдел</span>
+						</paper-item>
+
+					</paper-menu>
+				</paper-submenu>
+
+				<paper-submenu>
+					<paper-icon-item class="menu-trigger menu-items">
+						<iron-icon icon="folder" item-icon></iron-icon>
+						<paper-item-body>
+							Подведомственные организации
+						</paper-item-body>
+					</paper-icon-item>
+
+					<paper-menu class="menu-content"
+						attr-for-selected="data-route"
+						selected='{{data.page}}'>
+
+							<paper-item class="submenu-items" data-route="metod">
+								<paper-item-body>
+									Информационно - методический центр
+								</paper-item-body>
+							</paper-item>
+
+							<paper-item class="submenu-items" data-route="diet">
+								<paper-item-body>
+									Комбинат питания
+								</paper-item-body>
+							</paper-item>
+
+							<paper-item class="submenu-items" data-route="counting">
+								<paper-item-body>
+									Централизованная бухгалтерия
+								</paper-item-body>
+							</paper-item>
+
+							<paper-item class="submenu-items" data-route="transport">
+								<paper-item-body>
+									Транспортно - хозяйственное учреждение
+								</paper-item-body>
+							</paper-item>
+
+					</paper-menu>
+
+				</paper-submenu>
+
+				<paper-icon-item data-route="orgs">
+					<iron-icon icon="description" item-icon></iron-icon>
+					<paper-item-body>
+						Образовательные организации
+					</paper-item-body>
+				</paper-icon-item>
+
+				<paper-icon-item data-route="public">
+					<iron-icon icon="description" item-icon></iron-icon>
+					<paper-item-body>
+						Общественные организации
+					</paper-item-body>
+				</paper-icon-item>
+
+				<paper-icon-item data-route="business">
+					<iron-icon icon="description" item-icon></iron-icon>
+					<paper-item-body>
+						Реестр индивидуальных предпринимателей
+					</paper-item-body>
+				</paper-icon-item>
+
+				<paper-icon-item data-route="museum">
+					<iron-icon icon="description" item-icon></iron-icon>
+					<paper-item-body>
+						Виртуальный музей
+					</paper-item-body>
+				</paper-icon-item>
+
+				<paper-icon-item data-route="jobs">
+					<iron-icon icon="description" item-icon></iron-icon>
+					<paper-item-body>
+						Вакансии
+					</paper-item-body>
+				</paper-icon-item>
+
+		</paper-menu>
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 'x-drawer-menu',
+			properties: {
+				route: {
+          type: Object,
+          notify: true
+        },
+        data: {
+					type: Object,
+					notify: true
+				},
+				subData: {
+					type: Object,
+					notify: true
+				}
+			}
+		});
+	})();
+	</script>
+</dom-module>

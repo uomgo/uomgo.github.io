@@ -1,0 +1,106 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="x-footer">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+			}
+			footer {
+				/*height: 64px;*/
+				/*background-color: var(--paper-blue-grey-500);*/
+				background: -moz-linear-gradient(top, rgba(125,126,125,1) 0%,
+																							rgba(226,226,226,1) 10%,
+																							rgba(125,126,125,1) 90%,
+																							rgba(14,14,14,1) 100%);
+				/* FF3.6-15 */
+				background: -webkit-linear-gradient(top, rgba(125,126,125,1) 0%,
+																								 rgba(226,226,226,1) 10%,
+																								 rgba(125,126,125,1) 90%,
+																								 rgba(14,14,14,1) 100%);
+				/* Chrome10-25,Safari5.1-6 */
+				background: linear-gradient(to bottom, rgba(125,126,125,1) 0%,
+																							 rgba(226,226,226,1) 10%,
+																							 rgba(125,126,125,1) 90%,
+																							 rgba(14,14,14,1) 100%);
+				/* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+			}
+			.links {
+				@apply(--layout-horizontal);
+				@apply(--layout-center-justified);
+				@apply(--layout-wrap);
+			}
+			a.divlink {
+				display: block;
+				margin: 4px;
+				text-align: center;
+				padding: 4px;
+				max-height: 76px;
+				position: relative;
+			}
+			a.divlink:hover {
+				cursor: pointer;
+				border-radius: 8px;
+		    border: 0px solid #ddd;
+		    box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.4);
+		    transition: 0.5s;
+			}
+			img, iron-image {
+				height: 76px;
+				--iron-image-height: 76px;
+			}
+			paper-tooltip {
+				--paper-tooltip-background: var(--paper-light-blue-700);
+				--paper-tooltip: {
+					color: white;
+					opacity: 0.8;
+			    line-height: 22px;
+			    border-radius: 6px;
+					font-size: 12pt;
+				};
+			}
+		</style>
+
+		<firebase-query id="firebaseQuery"
+			path="/footer"
+			app-name="uomgo"
+			data="{{data}}">
+		</firebase-query>
+
+		<footer class="content shadow-elevation-4dp">
+			<div class="links">
+				<template is="dom-repeat" items="[[data]]" as="val">
+					<a class="divlink"
+						href=[[val.href]]
+						tabindex="-1"
+						target="_blank">
+							<iron-image
+								src=[[val.image]]>
+							</iron-image>
+							<paper-tooltip
+								position="top"
+								offset="6"
+								animation-delay="250">
+									<div>
+										<template
+											is="juicy-html"
+											content$="[[val.name]]">
+										</template>
+									</div>
+							</paper-tooltip>
+					</a>
+				</template>
+			</div>
+		</footer>
+
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 'x-footer'
+		});
+	})();
+	</script>
+</dom-module>

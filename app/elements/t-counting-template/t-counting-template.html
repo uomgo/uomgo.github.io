@@ -1,0 +1,128 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="t-counting-template">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+				word-wrap: break-word;
+				/*word-break: break-all;*/
+			}
+			paper-card {
+				width: 100%;
+				border-radius: 8px;
+				--paper-card-header-text: {
+					text-align: center;
+				};
+				--paper-card-content: {
+				};
+			}
+			iron-collapse:focus {
+				outline: none;
+			}
+			.collapse-content {
+				padding: 15px;
+				background-color: white;
+			}
+			.accordeonHeader {
+				padding: 0 8px;
+				cursor: pointer;
+			}
+			.accordeonBox {
+				padding: 8px 0;
+				background-color: var(--paper-blue-grey-50);
+			}
+		</style>
+
+
+		<firebase-document id="firebaseDocument"
+			app-name="uomgo"
+			path="/sections/counting"
+			data="{{docData}}">
+		</firebase-document>
+
+		<paper-card heading="МБУ Централизованная бухгалтерия УО МГО"
+			image=""
+			elevation="4"
+			animated-shadow="false">
+
+				<div class="card-content">
+					<div class="content">
+
+						<template is="juicy-html"	content$="[[docData.text]]"></template>
+
+						<div class="accordeonBox">
+							<div class="accordeonHeader paper-font-headline"
+								aria-expanded$="[[isExpanded(openedNSOT)]]"
+								aria-controls="NSOT"
+								on-tap="toggle" data-args="#NSOT">
+									НСОТ
+							</div>
+							<iron-collapse id="NSOT"
+								tabindex="0"
+								opened="{{openedNSOT}}">
+									<div class="collapse-content shadow">
+										<template is="juicy-html"
+											content$="[[docData.NSOT.text]]">
+										</template>
+									</div>
+							</iron-collapse>
+						</div>
+
+						<div class="accordeonBox">
+
+							<div class="accordeonHeader paper-font-headline"
+								aria-expanded$="[[isExpanded(openedPayroll)]]"
+								aria-controls="payroll"
+								on-tap="toggle" data-args="#payroll">
+									Начисление заработной платы
+							</div>
+
+							<iron-collapse id="payroll"
+								tabindex="0"
+								opened="{{openedPayroll}}">
+									<div class="collapse-content shadow">
+										<template is="juicy-html"
+											content$="[[docData.payroll.text]]">
+										</template>
+									</div>
+							</iron-collapse>
+
+						</div>
+
+					</div>
+				</div>
+		</paper-card>
+
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 't-counting-template',
+			// ready: function() {
+			// 	var ironAccordions = this.querySelector('iron-accordions');
+			// 	ironAccordions.addEventListener('transitionend', function() {
+			// 		var headerPanelMain = app.$.headerPanelMain;
+			// 		var scrollTop = headerPanelMain.scroller.scrollTop;
+			// 		var top = this._selection.selection[0].getBoundingClientRect().top;
+			// 		if ( this._selection.selection[0].opened ) {
+			// 			if ( top > 0 ) {
+			// 				headerPanelMain.scroll(top + scrollTop, true);
+			// 			} else if ( top < 0 ) {
+			// 				headerPanelMain.scroll( top + scrollTop - 64, true);
+			// 			};
+			// 		};
+			// 	});
+			// }
+			toggle: function(e) {
+		    document.querySelector( e.target.getAttribute('data-args') ).toggle();
+		  },
+			isExpanded: function(opened) {
+				return String(opened);
+			}
+		});
+	})();
+	</script>
+</dom-module>

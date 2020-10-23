@@ -1,0 +1,231 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="x-app-pages">
+  <template>
+    <style is="custom-style" include="shared-styles">
+      :host {
+        display: block;
+        word-wrap: break-word;
+      }
+    </style>
+
+    <animated-lazy-pages
+      attr-for-selected="data-route"
+      selected='{{data.page}}'
+      animate-initial-selection
+      loading="{{loading}}">
+
+      <template is="animated-lazy-page"
+        data-route="main">
+        <neon-animatable
+          entry-animation="fade-in-animation"
+          exit-animation="fade-out-animation"
+          animation-target>
+            <t-main-template
+              data-page="{{data.page}}"
+              sub-page="{{subPage}}">
+            </t-main-template>
+        <neon-animatable>
+      </template>
+
+      <template is="animated-lazy-page"
+        data-route="about">
+        <neon-animatable
+          entry-animation="fade-in-animation"
+          exit-animation="fade-out-animation"
+          animation-target>
+            <t-about-template sub-page="{{subPage}}"></t-about-template>
+        </neon-animatable>
+      </template>
+
+      <template is="animated-lazy-page"	data-route="virt">
+        <neon-animatable
+          entry-animation="fade-in-animation"
+          exit-animation="fade-out-animation"
+          animation-target>
+            <t-virt-template></t-virt-template>
+        </neon-animatable>
+      </template>
+
+      <template is="animated-lazy-page"	data-route="plan">
+        <neon-animatable
+          entry-animation="fade-in-animation"
+          exit-animation="fade-out-animation"
+          animation-target>
+            <t-plan-template></t-plan-template>
+        </neon-animatable>
+      </template>
+
+      <template is="animated-lazy-page"	data-route="inspect">
+        <neon-animatable
+          entry-animation="fade-in-animation"
+          exit-animation="fade-out-animation"
+          animation-target>
+            <t-inspect-template></t-inspect-template>
+      </neon-animatable>
+      </template>
+
+      <template is="animated-lazy-page"	data-route="preschool">
+        <neon-animatable
+          entry-animation="fade-in-animation"
+          exit-animation="fade-out-animation"
+          animation-target>
+            <t-preschool-template></t-preschool-template>
+      </neon-animatable>
+      </template>
+
+      <template is="animated-lazy-page"	data-route="sport">
+        <neon-animatable
+          entry-animation="fade-in-animation"
+          exit-animation="fade-out-animation"
+          animation-target>
+            <t-sport-template></t-sport-template>
+        </neon-animatable>
+      </template>
+
+      <template is="animated-lazy-page"	data-route="upbringe">
+        <neon-animatable
+          entry-animation="fade-in-animation"
+          exit-animation="fade-out-animation"
+          animation-target>
+            <t-upbringe-template></t-upbringe-template>
+        </neon-animatable>
+      </template>
+
+      <template is="animated-lazy-page"	data-route="tutelage">
+        <neon-animatable
+          entry-animation="fade-in-animation"
+          exit-animation="fade-out-animation"
+          animation-target>
+            <t-tutelage-template></t-tutelage-template>
+        </neon-animatable>
+      </template>
+
+      <template is="animated-lazy-page"	data-route="legal">
+        <neon-animatable
+          entry-animation="fade-in-animation"
+          exit-animation="fade-out-animation"
+          animation-target>
+            <t-legal-template></t-legal-template>
+        </neon-animatable>
+      </template>
+
+      <template is="animated-lazy-page"	data-route="orgs">
+        <neon-animatable
+          entry-animation="fade-in-animation"
+          exit-animation="fade-out-animation"
+          animation-target>
+            <t-orgs-template></t-legal-template>
+        </neon-animatable>
+      </template>
+
+      <template is="animated-lazy-page"	data-route="metod">
+        <neon-animatable
+          entry-animation="fade-in-animation"
+          exit-animation="fade-out-animation"
+          animation-target>
+            <t-metod-template></t-legal-template>
+        </neon-animatable>
+      </template>
+
+      <template is="animated-lazy-page"	data-route="diet">
+        <neon-animatable
+          entry-animation="fade-in-animation"
+          exit-animation="fade-out-animation"
+          animation-target>
+            <t-diet-template></t-legal-template>
+        </neon-animatable>
+      </template>
+
+      <template is="animated-lazy-page"	data-route="counting">
+        <neon-animatable
+          entry-animation="fade-in-animation"
+          exit-animation="fade-out-animation"
+          animation-target>
+            <t-counting-template></t-legal-template>
+        </neon-animatable>
+      </template>
+
+      <template is="animated-lazy-page"	data-route="transport">
+        <neon-animatable
+          entry-animation="fade-in-animation"
+          exit-animation="fade-out-animation"
+          animation-target>
+            <t-transport-template></t-legal-template>
+        </neon-animatable>
+      </template>
+
+      <template is="animated-lazy-page"	data-route="public">
+        <neon-animatable
+          entry-animation="fade-in-animation"
+          exit-animation="fade-out-animation"
+          animation-target>
+            <t-public-template></t-legal-template>
+        </neon-animatable>
+      </template>
+
+      <template is="animated-lazy-page"	data-route="business">
+        <neon-animatable
+          entry-animation="fade-in-animation"
+          exit-animation="fade-out-animation"
+          animation-target>
+            <t-business-template></t-legal-template>
+        </neon-animatable>
+      </template>
+
+      <template is="animated-lazy-page"	data-route="museum">
+        <neon-animatable
+          entry-animation="fade-in-animation"
+          exit-animation="fade-out-animation"
+          animation-target>
+            <t-museum-template></t-legal-template>
+        </neon-animatable>
+      </template>
+
+      <template is="animated-lazy-page"	data-route="jobs">
+        <neon-animatable
+          entry-animation="fade-in-animation"
+          exit-animation="fade-out-animation"
+          animation-target>
+            <t-jobs-template></t-legal-template>
+        </neon-animatable>
+      </template>
+
+    </animated-lazy-pages>
+
+    <template is="dom-if" if="[[loading]]">
+      <div class="layout horizontal center-center">
+        <paper-spinner-lite active="[[loading]]"
+                            alt="Загрузка ..."></paper-spinner-lite>
+      </div>
+    </template>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'x-app-pages',
+      properties: {
+        route: {
+          type: Object,
+          notify: true
+        },
+        data: {
+					type: Object,
+					notify: true
+				},
+				subData: {
+					type: Object,
+					notify: true
+				},
+				subPage: {
+					type: String,
+					notify: true
+				}
+      }
+    });
+  })();
+  </script>
+</dom-module>

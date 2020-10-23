@@ -1,0 +1,236 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="x-post-item">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+				@apply(--layout-wrap);
+				@apply(--layout-horizontal);
+				@apply(--layout-center-justified);
+				word-wrap: break-word;
+			}
+			.data-item {
+				/*margin: 16px 0 0 16px;*/
+				border-radius: 8px;
+				background-color: white;
+				border: 1px solid #ddd;
+				width: 514px;
+			}
+			paper-card {
+				--paper-card: {
+					text-align: center;
+				};
+				--paper-card-header-text: {
+					max-width: 480px;
+					text-align: center;
+				};
+				--paper-card-content: {
+					@apply(--layout-wrap);
+					@apply(--layout-vertical);
+					@apply(--layout-center-center);
+					text-align: center;
+				};
+				--paper-card-actions: {
+					@apply(--layout-wrap);
+					@apply(--layout-horizontal);
+					@apply(--layout-center-justified);
+					position: absolute;
+					bottom: 0;
+					left: 0;
+					right: 0;
+					text-align: center;
+					padding: 16px;
+					height: 24px;
+				};
+			}
+			.actions-container {
+				 height:24px;
+			}
+			paper-icon-button.edit {
+				/*--paper-icon-button-ink-color: white;*/
+				--paper-icon-button: {
+					width: 24px;
+					height: 24px;
+					background-color: white;
+					color: var(--paper-green-a700);
+					border-radius: 3px;
+					padding: 0px;
+				}
+				--paper-icon-button-hover: {
+					background-color: var(--paper-green-a400);
+					color: black;
+				}
+			}
+			paper-icon-button.delete {
+				/*--paper-icon-button-ink-color: black;*/
+				--paper-icon-button: {
+					width: 24px;
+					height: 24px;
+					background-color: white;
+					color: var(--paper-red-500);
+					border-radius: 3px;
+					padding: 0px;
+				}
+				--paper-icon-button-hover: {
+					background-color: var(--paper-red-500);
+					color: white;
+				}
+			}
+			.post-text {
+				max-height: 247px;
+				max-width: 100%;
+				overflow: auto;
+				/*padding: 16px 0 16px;*/
+			}
+			img, iron-image {
+				/*width: 100%;*/
+				/*--iron-image-width: 100%;*/
+			}
+			iron-image::shadow img {
+					max-width: 100%;
+					max-height: 270px;
+			}
+			.imageFrame {
+				width: 100%;
+				overflow:hidden;
+				overflow-x:hidden;
+				overflow-y:hidden;
+			}
+			@media all and (max-width: 601px) {
+				.data-item {
+					/*width: calc(100vw - 79px);*/
+					/*width: calc(100vw - 46px);*/
+					width: 100%;
+				}
+				.imageFrame {
+					width: calc(100% - 32px);
+				}
+			}
+			@media (max-width: 480px) {
+				.imageFrame {
+					height: 282px;
+				}
+			}
+			@media (max-width: 360px) {
+				.imageFrame {
+					height: auto;
+				}
+			}
+			.slide {
+				--paper-slide-width: 100%;
+				--paper-slide-height: 300px;
+			}
+		</style>
+
+		<firebase-auth id="auth"
+			user="{{user}}"
+			provider="google"
+			app-name="uomgo"
+			on-error="showError">
+		</firebase-auth>
+
+		<paper-card class="data-item"
+			heading="[[post.name]]"
+			elevation="4">
+
+			<div class="card-content">
+				<template  is="dom-if" if="[[post.video-id]]">
+					<google-youtube
+						video-id="[[post.video-id]]"
+						thumbnail="[[_youtubeBackground()]]"
+						rel="0"
+						start="0"
+						fluid
+						autoplay="1"
+						style$="[[_youtubeStyle(post)]]">
+					</google-youtube>
+				</template>
+
+				<template  is="dom-if" if="[[post.iframe]]">
+
+					<iframe class="imageFrame"
+						src="[[post.iframe]]"
+						frameborder="0"
+						height="360" width="480">
+					</iframe>
+
+				</template>
+
+				<template  is="dom-if" if="[[post.image]]">
+					<iron-image class="postImage"
+						src="[[post.image]]"
+						on-tap="_openView"
+						contain
+						preload
+						align="center">
+					</iron-image>
+				</template>
+
+				<template  is="dom-if" if="[[post.text]]">
+					<div class="yellow-gradient" style="margin-top:16px;width:100%;">
+						<div class="post-text">
+							<template
+								is="juicy-html"
+								content$="[[post.text]]">
+							</template>
+						</div>
+					</div>
+				</template>
+			</div>
+
+			<div class="content actions-container">
+				<div class="card-actions">
+					<div class="spacer">
+						<moment-js
+							date="[[post.date]]"
+							format="DD.MM.YYYYг.">
+						</moment-js>
+					</div>
+					<div hidden$="[[!user]]" style="padding:0 !important;">
+						<paper-icon-button class="edit"
+							icon="image:edit">
+						</paper-icon-button>
+						<paper-icon-button class="delete"
+							icon="delete">
+						</paper-icon-button>
+					</div>
+				</div>
+			</div>
+
+		</paper-card>
+
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 'x-post-item',
+			behaviors: [
+				Polymer.NeonAnimationRunnerBehavior,
+			],
+			properties: {
+			},
+			ready: function() {
+			},
+			editPostDialogOpen: function() {
+				editPostDialog.toggle();
+			},
+			deletePostDialogOpen: function() {
+			},
+			_youtubeBackground: function() {
+				return app.baseUrl+'images/youtube.png';
+			},
+			_youtubeStyle: function (post) {
+				var ret = 'background: transparent url(';
+						ret += 'https://i3.ytimg.com/vi/';
+						ret += post['video-id'];
+						ret += '/hqdefault.jpg';
+						ret += ') 50% 50% no-repeat; background-size: cover; max-width: 480px; max-height: 270px;';
+				return ret;
+			}
+		});
+	})();
+	</script>
+</dom-module>

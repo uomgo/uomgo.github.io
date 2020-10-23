@@ -1,0 +1,123 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="x-about-local-gov">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+				word-wrap: break-word;
+			}
+			paper-material {
+				background-color: white;
+				border-radius: 0 0 8px 8px;
+			}
+			iron-collapse:focus {
+				outline: none;
+			}
+			.collapse-content {
+				padding: 15px;
+				background-color: white;
+			}
+			.accordeonHeader {
+				padding: 0 8px;
+				cursor: pointer;
+			}
+			.accordeonBox {
+				padding: 8px 0;
+				background-color: var(--paper-blue-grey-50);
+			}
+		</style>
+		<firebase-document id="firebaseDocument"
+			app-name="uomgo"
+			path="/about/localGov"
+			data="{{docData}}">
+		</firebase-document>
+
+		<paper-material elevation="4">
+			<div class="content">
+<!--
+				<template
+					is="juicy-html"
+					content$="[[docData.text]]">
+				</template>
+ -->
+				<div class="accordeonBox">
+					<div class="accordeonHeader paper-font-headline"
+						aria-expanded$="[[isExpanded(openedCollegium)]]"
+						aria-controls="collegium"
+						on-tap="toggle" data-args="#collegium">
+							Коллегия МКУ УО МГО
+					</div>
+					<iron-collapse id="collegium"
+						tabindex="0"
+						opened="{{openedCollegium}}">
+						<div class="collapse-content shadow">
+							<template
+								is="juicy-html"
+								content$="[[docData.collegium.text]]">
+							</template>
+						</div>
+					</iron-collapse>
+				</div>
+
+				<div class="accordeonBox">
+					<div class="accordeonHeader paper-font-headline"
+						aria-expanded$="[[isExpanded(openedConucil)]]"
+						aria-controls="council"
+						on-tap="toggle" data-args="#council">
+							Муниципальный управляющий совет
+					</div>
+					<iron-collapse id="council"
+						tabindex="0"
+						opened="{{openedConucil}}">
+							<div class="collapse-content shadow">
+								<template
+									is="juicy-html"
+									content$="[[docData.council.text]]">
+								</template>
+							</div>
+					</iron-collapse>
+				</div>
+
+				<div class="accordeonBox">
+					<div class="accordeonHeader paper-font-headline"
+						aria-expanded$="[[isExpanded(openedCommission)]]"
+						aria-controls="commission"
+						on-tap="toggle" data-args="#commission">
+							Комиссия
+					</div>
+					<iron-collapse id="commission"
+						tabindex="0"
+						opened="{{openedCommission}}">
+							<div class="collapse-content shadow">
+								<template
+									is="juicy-html"
+									content$="[[docData.commission.text]]">
+								</template>
+							</div>
+					</iron-collapse>
+				</div>
+
+			</div>
+		</paper-material>
+
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 'x-about-local-gov',
+			properties: {
+
+			},
+			toggle: function(e) {
+		    document.querySelector( e.target.getAttribute('data-args') ).toggle();
+		  },
+			isExpanded: function(opened) {
+				return String(opened);
+			}
+		});
+	})();
+	</script>
+</dom-module>

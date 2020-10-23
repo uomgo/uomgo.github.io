@@ -1,0 +1,112 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="x-route">
+	<template>
+		<style>
+			:host {
+				display: block;
+			}
+		</style>
+
+		<firebase-auth id="auth"
+			user="{{user}}"
+			provider="google"
+			app-name="uomgo"
+			on-error="showError">
+		</firebase-auth>
+
+		<app-location
+			route="{{route}}"
+			use-hash-as-path>
+		</app-location>
+
+		<app-route
+			route="{{route}}"
+			pattern="/:page"
+			data="{{data}}"
+			tail="{{_tail}}">
+		</app-route>
+
+		<app-route
+			route="{{_tail}}"
+			pattern="/:subPage"
+			data="{{subData}}">
+		</app-route>
+
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 'x-route',
+			properties: {
+				route: {
+					type: Object,
+					observer: '_routeChanged',
+					notify: true
+				},
+				data: {
+					type: Object,
+					notify: true
+				},
+				subData: {
+					type: Object,
+					notify: true
+				},
+				_tail: {
+					type: Object
+				}
+			},
+			ready: function() {
+				switch(this.route.path) {
+					case '':
+						this.async(function() {
+							this.set('route.path', '/main');
+						});
+						break;
+					case '/':
+						this.async(function() {
+							this.set('route.path', '/main');
+						});
+						break;
+				}
+			},
+			_routeChanged: function(newValue, oldValue) {
+				// console.log(oldValue, newValue);
+				// this._switchRoutePath(newValue);
+			},
+			_switchRoutePath: function(newValue) {
+				switch(newValue.path) {
+					case '':
+						this.async(function() {
+							this.set('newValue.path', '/main');
+						});
+						break;
+					case '/':
+						this.async(function() {
+							this.set('newValue.path', '/main');
+						});
+						break;
+					// case '/about':
+					// 	this.async(function() {
+					// 		this.set('newValue.path', '/about/boss');
+					// 	});
+					// 	break;
+					// case '/virt':
+					// 	if (this.user) {
+					// 		this.async(function() {
+					// 			this.set('newValue.path', '/virt/messages');
+					// 		});
+					// 		} else {
+					// 		this.async(function() {
+					// 			this.set('newValue.path', '/virt/rules');
+					// 		});
+					// 	};
+					// 	break;
+				}
+			}
+		});
+	})();
+	</script>
+</dom-module>

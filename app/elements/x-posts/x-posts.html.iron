@@ -1,0 +1,167 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<script src="../../scripts/scorocode.min.js"></script>
+
+<dom-module id="x-posts">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+				word-wrap: break-word;
+			}
+
+			#loadingIndicator {
+				height: 40px;
+	      text-align: center;
+	    }
+
+			#loadingIndicator paper-spinner {
+				height: 20px;
+				margin-right: 10px;
+	      width: 20px;
+	    }
+
+			iron-list {
+				background-color: var(--paper-grey-200, #eee);
+		    padding-bottom: 16px;
+				margin: 0 16px;
+		  }
+
+			@media (max-width: 600px) {
+				iron-list {
+					margin-left: 0;
+					margin-right: 0;
+				}
+			}
+
+		</style>
+
+		<iron-scroll-threshold id="scrollTheshold"
+												   lower-threshold="500"
+												   on-lower-threshold="_loadMoreData">
+
+			<iron-list id="ironList"
+								 items="[[dataDB]]"
+								 as="post"
+								 scroll-target="scrollThreshold"
+								 selection-enabled>
+
+				<template id="templateList">
+					<div>
+						<template is="dom-if" if="[[post.enabled]]" on-dom-change="_onDomIfChange">
+							<x-post-item	post="[[post]]"
+														show-dialog-visible="{{showDialogVisible}}"
+														post-item="{{postItem}}"></x-post-item>
+						</template>
+					</div>
+				</template>
+			</iron-list>
+		</iron-scroll-threshold>
+
+	  <div id="loadingIndicator">
+			<paper-spinner-lite active
+										 alt="Загрузка ..."></paper-spinner-lite>
+	  </div>
+
+		<x-post-dialog-item id="dialog"
+												post-item="{{postItem}}"
+												show-dialog-visible="{{showDialogVisible}}"</x-post-dialog-item>
+
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+			Polymer({
+				is: 'x-posts',
+				behaviors: [
+					Polymer.NeonAnimationRunnerBehavior
+				],
+				properties: {
+					dataDB: {
+			      type: Array,
+			      observer: '_dataChanged'
+			    },
+					post: {
+						type: Object
+					},
+					postItem: {
+						type: Object
+					},
+					user: {
+						type: Object
+					},
+					sc: {
+						type: Object,
+						value: Scorocode
+					},
+					limit: {
+						type: Number,
+						value: 0
+					},
+					showDialogVisible: {
+	          type: Boolean,
+						value: false
+	        }
+				},
+
+				ready: function() {
+					var ironList = this.querySelector('#ironList');
+					var scrollTheshold = this.querySelector('#scrollTheshold');
+					var headerPanelMain = document.querySelector('#headerPanelMain');
+				  scrollTheshold.scrollTarget = headerPanelMain.scroller;
+					this.sc.Init({
+					    ApplicationID: "671087465f924714b2f7e212f5d68f55",
+					    JavaScriptKey: "9c386463a16541ffbf0740adb7c35cf8",
+					    MasterKey:     "18a2419c9b6e4d6e8870836dd7d7e23c"
+					});
+				},
+
+				_dataChanged: function (newData, oldData) {
+					// console.log(newData, oldData);
+			  },
+
+				_renderRepeat: function () {
+					var xPostItems = Polymer.dom(this.root).querySelectorAll('x-post-item');
+					this.animationConfig['entry'][0].nodes = Array.prototype.slice.call(xPostItems);
+					this.playAnimation('entry');
+				},
+
+				_onDomIfChange: function(e) {
+					var post = this.$.ironList.modelForElement(e.currentTarget.parentElement).post;
+	        this.$.ironList.updateSizeForItem(post);
+					// this.$.ironList.notifyResize();
+				},
+
+				_dataFind: function() {
+					var data;
+					var loadingIndicator = this.$.loadingIndicator;
+					loadingIndicator.hidden = false;
+					data = new this.sc.Query("posts").limit(this.limit).descending("date");
+					data.find()
+						.then((finded)=>{
+							this.dataDB = finded.result;
+							loadingIndicator.hidden = true;
+						})
+						.catch((err)=>{
+							console.log(err)
+						});
+				},
+
+				_loadMoreData: function (e) {
+					if (this.limit === 0) {
+						this.limit = 2
+						this.debounce('dataFind', this._dataFind, 300);
+					};
+					if (this.dataDB) {
+						if (this.limit <= this.dataDB.length) {
+							this.debounce('dataFind', this._dataFind, 300);
+							this.limit += 1;
+						};
+					};
+					e.target.clearTriggers();
+				}
+
+			});
+	})();
+	</script>
+</dom-module>

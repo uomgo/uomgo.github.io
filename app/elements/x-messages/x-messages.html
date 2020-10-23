@@ -1,0 +1,62 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="x-messages">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+			}
+			x-message-item {
+				margin: 0 16px 16px;
+			}
+			@media (max-width: 600px) {
+				x-message-item {
+					margin-left: 0;
+					margin-right: 0;
+				}
+			}
+		</style>
+		<firebase-query id="firebaseQueryMessages"
+			path="/messages"
+			app-name="uomgo"
+			order-by-child="date"
+			data="{{dataDB}}">
+		</firebase-query>
+
+		<template is="dom-repeat"
+			items="[[dataDB]]"
+			as="message"
+			sort="_computeSort"
+			target-framerate="60">
+
+				<div>
+					<template is="dom-if" if="[[message.visible]]">
+						<x-message-item message="[[message]]"></x-message-item>
+					</template>
+				</div>
+
+		</template>
+
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 'x-messages',
+			properties: {
+
+			},
+			ready: function() {
+
+			},
+			_computeSort: function(a, b) {
+				if (a.date == b.date) {
+					return 0;
+				}
+				return a.date > b.date ? -1 : 1;
+			}
+		});
+	})();
+	</script>
+</dom-module>

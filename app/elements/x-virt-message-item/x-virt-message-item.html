@@ -1,0 +1,149 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="x-virt-message-item">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+				word-wrap: break-word;
+				/*word-break: break-all;*/
+			}
+			paper-card {
+				width: 100%;
+				border-radius: 8px;
+				margin-bottom: 16px;
+				--paper-card-header-text: {
+					text-align: center;
+				};
+				--paper-card-content: {
+				};
+				--paper-card-actions: {
+				};
+			}
+			paper-icon-button.edit {
+				/*--paper-icon-button-ink-color: white;*/
+				--paper-icon-button: {
+					width: 24px;
+					height: 24px;
+					background-color: white;
+					color: var(--paper-green-a700);
+					border-radius: 3px;
+					padding: 0px;
+				}
+				--paper-icon-button-hover: {
+					background-color: var(--paper-green-a400);
+					color: black;
+				}
+			}
+			paper-icon-button.delete {
+				/*--paper-icon-button-ink-color: black;*/
+				--paper-icon-button: {
+					width: 24px;
+					height: 24px;
+					background-color: white;
+					color: var(--paper-red-500);
+					border-radius: 3px;
+					padding: 0px;
+				}
+				--paper-icon-button-hover: {
+					background-color: var(--paper-red-500);
+					color: white;
+				}
+			}
+		</style>
+
+		<firebase-auth id="auth"
+									 user="{{user}}"
+									 provider="google"
+									 app-name="uomgo"
+									 on-error="showError"></firebase-auth>
+
+<!--
+		<paper-card heading="" elevation="4">
+			<div class="card-content">
+				<div class="element">
+					<grid-element ga="16px" center>
+						<grid-col>
+							Дата: <moment-js date="[[val.date]]" format="DD.MM.YYYYг."></moment-js>
+						</grid-col>
+						<grid-col>
+							Отправитель: [[val.name]]
+						</grid-col>
+						<grid-col>
+							Тема: [[val.theme]]
+						</grid-col>
+					</grid-element>
+					<grid-element ga="16px" center>
+						<grid-col>
+							[[val.text]]
+						</grid-col>
+					</grid-element>
+					<template is="dom-if" if="[[val.reply]]">
+						<hr>
+						<grid-element ga="16px" center>
+							<grid-col>
+								<b>
+									<moment-js date="[[val.replyDate]]" format="DD.MM.YYYYг."></moment-js>
+								</b>
+							</grid-col>
+						</grid-element>
+						<grid-element ga="16px" center>
+							<grid-col>
+
+								<div class="textReply" hidden$="[[hide]]">
+									<b>[[val.reply]]</b>
+								</div>
+
+								<div class="textReplyEdit" hidden$="[[!hide]]">
+									<paper-textarea class="textarea" value="[[val.reply]]"></paper-textarea>
+									<paper-button raised on-tap="save">Сохранить</paper-button>
+								</div>
+
+							</grid-col>
+						</grid-element>
+					</template>
+				</div>
+			</div>
+			<div class="card-actions" hidden$="[[!user]]">
+				<div class="content layout horizontal end-justified wrap">
+					<paper-icon-button class="edit"
+						icon="image:edit"
+						on-tap="edit"></paper-icon-button>
+					<paper-icon-button class="delete"
+						icon="delete"
+						on-tap=""></paper-icon-button>
+				</div>
+			</div>
+		</paper-card>
+ -->
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 'x-virt-message-item',
+			properties: {
+				hide: {
+					type: Boolean,
+					value: false
+				}
+			},
+			ready: function() {
+				// var textReply = document.querySelector("#textReply");
+				// var textReplyEdit = document.querySelector("#textReplyEdit");
+				// var textarea = document.querySelector("#textarea");
+			},
+			edit: function(e) {
+				console.log(e.target.model);
+				this.hide = true;
+			},
+			save: function(e) {
+				var textarea = e.target.parentElement.querySelector(".textarea").value;
+				console.log(textarea);
+				// this.hide = false;
+			}
+		});
+	})();
+	</script>
+</dom-module>

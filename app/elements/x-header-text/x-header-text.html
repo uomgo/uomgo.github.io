@@ -1,0 +1,71 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="x-header-text">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+			}
+			#header-text {
+				text-shadow: 1px 2px 1px rgba(51, 51, 51, 0.5),
+										 1px 2px 1px rgba(51, 51, 51, 0.5),
+										 1px 2px 1px rgba(51, 51, 51, 0.5),
+										 1px 2px 1px rgba(51, 51, 51, 0.5),
+										 1px 2px 1px rgba(51, 51, 51, 0.5),
+										 1px 2px 1px rgba(51, 51, 51, 0.5),
+										 1px 2px 1px rgba(51, 51, 51, 0.5),
+										 1px 2px 1px rgba(51, 51, 51, 0.5),
+										 1px 2px 1px rgba(51, 51, 51, 0.5),
+										 1px 2px 1px rgba(51, 51, 51, 0.5);
+				font-weight: bolder;
+				font-size: 4vw;
+				color: white;
+			}
+			@media all and (min-width: 0) and (max-width: 320px) {
+			#header-text {
+					font-size: 18px;
+					margin: -48px 8px 0px;
+				}
+			}
+			@media all and (min-width: 321px) and (max-width: 360px) {
+			#header-text {
+					font-size: 22px;
+					margin: -48px 16px 0px;
+				}
+			}
+			@media all and (min-width: 361px) and (max-width: 600px) {
+			#header-text {
+					font-size: 24px;
+					margin: -48px 24px 0px;
+				}
+			}
+			@media all and (min-width: 601px) and (max-width: 1280px) {
+			#header-text {
+					/*font-size: 32px;*/
+					margin: -48px 48px 0px;
+				}
+			}
+			@media all and (min-width: 1281px) {
+			#header-text {
+					font-size: 51px;
+					margin: -48px 48px 0px;
+				}
+			}
+		</style>
+
+		<div id="header-text">
+			<div>Управление образованием</div>
+			<div>Мысковского городского округа</div>
+		</div>
+
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 'x-header-text'
+		});
+	})();
+	</script>
+</dom-module>

@@ -1,0 +1,173 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="x-post-dialog-item">
+  <template>
+    <style is="custom-style" include="shared-styles">
+      :host {
+        display: block;
+        word-wrap: break-word;
+      }
+			paper-dialog {
+				width: calc(100vw - 80px);
+				min-height: calc(100vh - 74px);
+			}
+			iron-image {
+				width: 100%;
+		    height: 100%;
+			}
+			iron-image::shadow img {
+				max-width: 100%;
+		    max-height: 100%;
+			}
+      .header {
+        text-align: center;
+      }
+      .post-text {
+        text-align: center;
+        width: 100%;
+        padding: 16px 0;
+      }
+			.image-box {
+        height: calc(100vh - 172px);
+        width: 100%;
+			}
+			.video-box {
+        height: calc(100vh - 172px);
+        width: 100%;
+			}
+			#dialog::shadow #scroller {
+			  max-height: 100%;
+			  max-width: 100%;
+			}
+    </style>
+
+    <paper-dialog id="dialog"
+			entry-animation="scale-up-animation"
+			exit-animation="fade-out-animation"
+			opened="{{showDialogVisible}}"
+			on-iron-overlay-closed="_dialogClosed"
+			with-backdrop
+			always-on-top>
+
+	      <div class="header layout horizontal center-center">
+	        <div class="paper-font-headline flex">
+						[[postItem.name]]
+					</div>
+	        <paper-icon-button icon="close"
+						title="Закрыть"
+						on-tap="_close">
+					</paper-icon-button>
+	      </div>
+
+	      <paper-dialog-scrollable>
+	        <div class="scrollable-box layout vertical center-center">
+
+						<template is="dom-if" if="[[postItem.image]]">
+							<div class="image-box">
+		      			<iron-image class="postImage"
+		      				src="[[postItem.image]]"
+		      				sizing="contain"
+		      				preload>
+								</iron-image>
+							</div>
+	      		</template>
+
+						<template  is="dom-if" if="[[postItem.video_id]]">
+							<div class="video-box layout vertical center-center">
+								<google-youtube
+	                id="youtube"
+									video-id="[[postItem.video_id]]"
+	                width="704px"
+	                height="396px"
+									rel="0"
+									start="0"
+									autoplay="0"
+									style="max-width: 704px; max-height: 396px; width: 100%; height: 100%;">
+								</google-youtube>
+							</div>
+						</template>
+
+	          <template is="dom-if" if="[[postItem.images]]">
+	            <template
+								is="dom-repeat"
+	              items="[[postItem.images]]"
+	              as="image">
+		              <div class="image-box" style="margin-top: 16px;">
+		                <iron-image class="postImage"
+											sizing="contain"
+											src="[[image]]"
+											preload>
+										</iron-image>
+		              </div>
+	            </template>
+	          </template>
+
+	          <template is="dom-if" if="[[postItem.text]]">
+	            <div class="post-text">
+								<template
+									is="juicy-html"
+									content$="[[postItem.text]]">
+								</template>
+							</div>
+	      		</template>
+
+	        </div>
+	      </paper-dialog-scrollable>
+
+		</paper-dialog>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'x-post-dialog-item',
+      properties: {
+        postItem: {
+          type: Object,
+					notify: true
+        },
+				showDialogVisible: {
+					type: Boolean,
+					observer: '_changeDialogVisible',
+					notify: true
+				}
+      },
+
+      ready: function() {
+				var dialog = this.querySelector("#dialog");
+				dialog.addEventListener('opened-changed', function() {
+          if(dialog.opened) {
+            Polymer.IronDropdownScrollManager.pushScrollLock(dialog);
+						dialog._finishRenderOpened();
+          } else {
+            Polymer.IronDropdownScrollManager.removeScrollLock(dialog);
+						dialog._finishRenderClosed();
+          }
+        });
+      },
+
+      _dialogClosed: function(e) {
+				var element = e.target;
+        var youtube = element.querySelector('#youtube');
+        if ( youtube ) {
+          youtube.pause();
+        };
+			},
+
+      _close: function() {
+        this.$.dialog.close();
+      },
+
+			_changeDialogVisible: function() {
+				if (this.showDialogVisible) {
+					this.$.dialog.open();
+        } else {
+          this.$.dialog.close();
+        }
+			}
+
+    });
+  })();
+  </script>
+</dom-module>

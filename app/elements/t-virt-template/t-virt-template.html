@@ -1,0 +1,76 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="t-virt-template">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+				word-wrap: break-word;
+				/*word-break: break-all;*/
+			}
+		</style>
+
+		<animated-lazy-pages attr-for-selected="data-route"
+                         selected="{{subPage}}"
+												 animate-initial-selection
+												 fallback-selection="rules"
+                         loading="{{loading}}">
+
+			<template is="animated-lazy-page" data-route="rules">
+        <neon-animatable entry-animation="fade-in-animation"
+                         exit-animation="fade-out-animation"
+                         animation-target>
+
+          <x-virt-rules sub-page="{{subPage}}"></x-virt-rules>
+
+        <neon-animatable>
+      </template>
+
+			<template is="animated-lazy-page" data-route="messages">
+        <neon-animatable entry-animation="fade-in-animation"
+                         exit-animation="fade-out-animation"
+                         animation-target>
+
+          <x-virt-messages></x-virt-messages>
+
+        <neon-animatable>
+      </template>
+
+		</animated-lazy-pages>
+
+		<template  is="dom-if" if="[[loading]]">
+      <div class="layout horizontal center-center">
+        <paper-spinner-lite active="[[loading]]"
+                            alt="Загрузка ..."></paper-spinner-lite>
+      </div>
+    </template>
+
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 't-virt-template',
+			properties: {
+				route: {
+          type: Object,
+          notify: true
+        },
+        data: {
+					type: Object,
+					notify: true
+				},
+				subData: {
+					type: Object,
+					notify: true
+				},
+				subPage: {
+					type: String,
+					notify: true
+				}
+			}
+		});
+	})();
+	</script>
+</dom-module>

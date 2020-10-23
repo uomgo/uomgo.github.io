@@ -1,0 +1,287 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="t-upbringe-template">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+				word-wrap: break-word;
+				/*word-break: break-all;*/
+			}
+			paper-card {
+				width: 100%;
+				border-radius: 8px;
+				--paper-card-header-text: {
+					text-align: center;
+				};
+				--paper-card-content: {
+				};
+			}
+			iron-collapse:focus {
+				outline: none;
+			}
+			.collapse-content {
+				padding: 15px;
+				background-color: white;
+			}
+			.accordeonHeader {
+				padding: 0 8px;
+				cursor: pointer;
+			}
+			.accordeonBox {
+				padding: 8px 0;
+				background-color: var(--paper-blue-grey-50);
+			}
+		</style>
+
+		<firebase-document id="firebaseDocument"
+			app-name="uomgo"
+			path="/sections/upbringe"
+			data="{{docData}}">
+		</firebase-document>
+
+		<paper-card id="card"
+			heading="Отдел воспитательной работы и дополнительного образования"
+			image=""
+			elevation="4"
+			animated-shadow="false">
+
+				<div class="card-content"></div>
+					<div class="content">
+
+						<template
+							is="juicy-html"
+							content$="[[docData.text]]">
+						</template>
+
+						<div class="accordeonBox">
+							<div class="accordeonHeader paper-font-headline"
+								aria-expanded$="[[isExpanded(openedConceptEducation)]]"
+								aria-controls="conceptEducation"
+								on-tap="toggle" data-args="#conceptEducation">
+									Концепция развития дополнительного образования детей
+							</div>
+							<iron-collapse id="conceptEducation"
+								tabindex="0"
+								opened="{{openedConceptEducation}}">
+									<div class="collapse-content shadow">
+										<template
+											is="juicy-html"
+											content$="[[docData.conceptEducation.text]]">
+										</template>
+									</div>
+							</iron-collapse>
+						</div>
+
+						<div class="accordeonBox">
+							<div class="accordeonHeader paper-font-headline"
+								aria-expanded$="[[isExpanded(openedQualityEducation)]]"
+								aria-controls="qualityEducation"
+								on-tap="toggle" data-args="#qualityEducation">
+									Оценка качества образования в организациях ДОД
+							</div>
+							<iron-collapse id="qualityEducation"
+								tabindex="0"
+								opened="{{openedQualityEducation}}">
+									<div class="collapse-content shadow">
+										<template
+											is="juicy-html"
+											content$="[[docData.qualityEducation.text]]">
+										</template>
+									</div>
+							</iron-collapse>
+						</div>
+
+						<div class="accordeonBox">
+							<div class="accordeonHeader paper-font-headline"
+								aria-expanded$="[[isExpanded(openedCareerGuidance)]]"
+								aria-controls="careerGuidance"
+								on-tap="toggle" data-args="#careerGuidance">
+									Профильное обучение и профессиональная ориентация
+							</div>
+							<iron-collapse id="careerGuidance"
+								tabindex="0"
+								opened="{{openedCareerGuidance}}">
+									<div class="collapse-content shadow">
+										<template
+											is="juicy-html"
+											content$="[[docData.careerGuidance.text]]">
+										</template>
+									</div>
+							</iron-collapse>
+						</div>
+
+						<div class="accordeonBox">
+							<div class="accordeonHeader paper-font-headline"
+								aria-expanded$="[[isExpanded(openedYouth)]]"
+								aria-controls="youth"
+								on-tap="toggle" data-args="#youth">
+									Поддержка талантливой молодежи
+							</div>
+							<iron-collapse id="youth"
+								tabindex="0"
+								opened="{{openedYouth}}">
+									<div class="collapse-content shadow">
+										<template
+											is="juicy-html"
+											content$="[[docData.youth.text]]">
+										</template>
+									</div>
+							</iron-collapse>
+						</div>
+
+						<div class="accordeonBox">
+							<div class="accordeonHeader paper-font-headline"
+								aria-expanded$="[[isExpanded(openedCouncilYouth)]]"
+								aria-controls="councilYouth"
+								on-tap="toggle" data-args="#councilYouth">
+									Совет детей и молодежи
+							</div>
+							<iron-collapse id="councilYouth"
+								tabindex="0"
+								opened="{{openedCouncilYouth}}">
+									<div class="collapse-content shadow">
+										<template
+											is="juicy-html"
+											content$="[[docData.councilYouth.text]]">
+										</template>
+									</div>
+							</iron-collapse>
+						</div>
+
+						<div class="accordeonBox">
+							<div class="accordeonHeader paper-font-headline"
+								aria-expanded$="[[isExpanded(openedCompetitions)]]"
+								aria-controls="competitions"
+								on-tap="toggle" data-args="#competitions">
+									Конкурсы
+							</div>
+							<iron-collapse id="competitions"
+								tabindex="0"
+								opened="{{openedCompetitions}}">
+									<div class="collapse-content shadow">
+										<template
+											is="juicy-html"
+											content$="[[docData.competitions.text]]">
+										</template>
+									</div>
+							</iron-collapse>
+						</div>
+
+						<div class="accordeonBox">
+							<div class="accordeonHeader paper-font-headline"
+								aria-expanded$="[[isExpanded(openedCrimePrevention)]]"
+								aria-controls="crimePrevention"
+								on-tap="toggle" data-args="#crimePrevention">
+									Профилактика правонарушений
+							</div>
+							<iron-collapse id="crimePrevention"
+								tabindex="0"
+								opened="{{openedCrimePrevention}}">
+									<div class="collapse-content shadow">
+										<template
+											is="juicy-html"
+											content$="[[docData.crimePrevention.text]]">
+										</template>
+									</div>
+							</iron-collapse>
+						</div>
+
+						<div class="accordeonBox">
+							<div class="accordeonHeader paper-font-headline"
+								aria-expanded$="[[isExpanded(openedPreventionSubstanceUse)]]"
+								aria-controls="preventionSubstanceUse"
+								on-tap="toggle" data-args="#preventionSubstanceUse">
+									Профилактика употребления ПАВ
+							</div>
+							<iron-collapse id="preventionSubstanceUse"
+								tabindex="0"
+								opened="{{openedPreventionSubstanceUse}}">
+								<div class="collapse-content shadow">
+									<template
+										is="juicy-html"
+										content$="[[docData.preventionSubstanceUse.text]]">
+									</template>
+								</div>
+							</iron-collapse>
+						</div>
+
+						<div class="accordeonBox">
+							<div class="accordeonHeader paper-font-headline"
+								aria-expanded$="[[isExpanded(openedMilitaryEducation)]]"
+								aria-controls="militaryEducation"
+								on-tap="toggle" data-args="#militaryEducation">
+									Военно-патриотическое и гражданское воспитание
+							</div>
+							<iron-collapse id="militaryEducation"
+								tabindex="0"
+								opened="{{openedMilitaryEducation}}">
+									<div class="collapse-content shadow">
+										<template
+											is="juicy-html"
+											content$="[[docData.militaryEducation.text]]">
+										</template>
+									</div>
+							</iron-collapse>
+						</div>
+
+						<div class="accordeonBox">
+							<div class="accordeonHeader paper-font-headline"
+								aria-expanded$="[[isExpanded(openedGubernatorialInstitutions)]]"
+								aria-controls="gubernatorialInstitutions"
+								on-tap="toggle" data-args="#gubernatorialInstitutions">
+									Губернаторские учреждения
+							</div>
+							<iron-collapse id="gubernatorialInstitutions"
+								tabindex="0"
+								opened="{{openedGubernatorialInstitutions}}">
+									<div class="collapse-content shadow">
+										<template
+											is="juicy-html"
+											content$="[[docData.gubernatorialInstitutions.text]]">
+										</template>
+									</div>
+							</iron-collapse>
+						</div>
+
+						<div class="accordeonBox">
+							<div class="accordeonHeader paper-font-headline"
+								aria-expanded$="[[isExpanded(openedSummer)]]"
+								aria-controls="summer"
+								on-tap="toggle" data-args="#summer">
+									Летний отдых
+							</div>
+							<iron-collapse id="summer"
+								tabindex="0"
+								opened="{{openedSummer}}">
+									<div class="collapse-content shadow">
+										<template
+											is="juicy-html"
+											content$="[[docData.summer.text]]">
+										</template>
+									</div>
+							</iron-collapse>
+						</div>
+
+					</div>
+				</div>
+
+		</paper-card>
+
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 't-upbringe-template',
+			toggle: function(e) {
+		    document.querySelector( e.target.getAttribute('data-args') ).toggle();
+		  },
+			isExpanded: function(opened) {
+				return String(opened);
+			}
+		});
+	})();
+	</script>
+</dom-module>

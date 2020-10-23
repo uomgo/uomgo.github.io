@@ -1,0 +1,118 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="x-inspect-GIA">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+				word-wrap: break-word;
+			}
+			paper-tabs {
+				--paper-tabs: {
+					border-radius: 8px 8px 0 0;
+					background-color: var(--paper-blue-50);
+					/*color: white;*/
+				};
+			}
+			paper-card {
+				--paper-card: {
+					width: 100%;
+					/*text-align: center;*/
+				};
+				--paper-card-header-text: {
+					text-align: center;
+				};
+				--paper-card-content: {
+				};
+				--paper-card-actions: {
+				};
+			}
+		</style>
+
+		<paper-tabs selected="{{selection}}" scrollable fit-container>
+			<paper-tab>ГИА</paper-tab>
+			<paper-tab>ЕГЭ</paper-tab>
+			<paper-tab>ОГЭ</paper-tab>
+			<paper-tab>ГВЭ</paper-tab>
+		</paper-tabs>
+
+		<iron-pages selected="{{selection}}">
+			<section>
+				<paper-card
+					heading="Государственная итоговая аттестация"
+					image=""
+					elevation="1"
+					animated-shadow="false">
+					  <div class="card-content">
+							<template
+								is="juicy-html"
+								content$="[[docData.GIA.text]]">
+							</template>
+					  </div>
+					  <!-- <div class="card-actions"></div> -->
+				</paper-card>
+			</section>
+			<section>
+				<paper-card
+					heading="Единый государственный экзамен"
+					image=""
+					elevation="1"
+					animated-shadow="false">
+					  <div class="card-content">
+							<template
+								is="juicy-html"
+								content$="[[docData.EGE.text]]">
+							</template>
+					  </div>
+					  <!-- <div class="card-actions"></div> -->
+				</paper-card>
+			</section>
+			<section>
+				<paper-card
+					heading="Основной государственный экзамен"
+					image=""
+					elevation="1"
+					animated-shadow="false">
+					  <div class="card-content">
+							<template
+								is="juicy-html"
+								content$="[[docData.OGE.text]]">
+							</template>
+					  </div>
+					  <!-- <div class="card-actions"></div> -->
+				</paper-card>
+			</section>
+			<section>
+				<paper-card
+					heading="Государственный выпускной экзамен"
+					image=""
+					elevation="1"
+					animated-shadow="false">
+					  <div class="card-content">
+							<template
+								is="juicy-html"
+								content$="[[docData.GVE.text]]">
+							</template>
+					  </div>
+					  <!-- <div class="card-actions"></div> -->
+				</paper-card>
+			</section>
+		</iron-pages>
+
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 'x-inspect-GIA',
+			properties: {
+				selection: {
+					type: Number,
+					value: 0
+				}
+			},
+		});
+	})();
+	</script>
+</dom-module>

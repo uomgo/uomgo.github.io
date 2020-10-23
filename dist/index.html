@@ -1,0 +1,73 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="description" content=""><meta name="viewport" content="width=device-width, initial-scale=1"><title>УОМГО</title><link rel="apple-touch-icon" sizes="57x57" href="images/touch/apple-touch-icon-57x57.png"><link rel="apple-touch-icon" sizes="60x60" href="images/touch/apple-touch-icon-60x60.png"><link rel="apple-touch-icon" sizes="72x72" href="images/touch/apple-touch-icon-72x72.png"><link rel="apple-touch-icon" sizes="76x76" href="images/touch/apple-touch-icon-76x76.png"><link rel="apple-touch-icon" sizes="114x114" href="images/touch/apple-touch-icon-114x114.png"><link rel="apple-touch-icon" sizes="120x120" href="images/touch/apple-touch-icon-120x120.png"><link rel="apple-touch-icon" sizes="144x144" href="images/touch/apple-touch-icon-144x144.png"><link rel="apple-touch-icon" sizes="152x152" href="images/touch/apple-touch-icon-152x152.png"><link rel="apple-touch-icon" sizes="180x180" href="images/touch/apple-touch-icon-180x180.png"><link rel="icon" type="image/png" href="images/touch/favicon-32x32.png" sizes="32x32"><link rel="icon" type="image/png" href="images/touch/android-chrome-192x192.png" sizes="192x192"><link rel="icon" type="image/png" href="images/touch/favicon-16x16.png" sizes="16x16"><link rel="manifest" href="manifest.json"><link rel="mask-icon" href="images/touch/safari-pinned-tab.svg" color="#5bbad5"><meta name="apple-mobile-web-app-title" content="УОМГО"><meta name="application-name" content="УОМГО"><meta name="msapplication-TileColor" content="#3372DF"><meta name="msapplication-TileImage" content="images/touch/mstile-144x144.png"><meta name="theme-color" content="#2E3AA1"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="stylesheet" href="styles/main.css"><script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script><link rel="import" href="./elements/elements.html"></head><style is="custom-style" include="shared-styles">
+	paper-scroll-header-panel {
+		--paper-scroll-header-panel-header-container: {
+			pointer-events: none;
+		};
+	}
+	.middle.middle-container {
+		pointer-events: none;
+	}
+	.bookmark {
+		position: absolute;
+		bottom: -24px;
+		right: 24px;
+		fill: #4285f4;
+		height: 48px;
+		width: 48px;
+	}
+	paper-tabs {
+		border-radius: 50px;
+		color: black;
+		/*background-color: var(--primary-color);*/
+		/*background-color: rgba(33,150,243,0.6);*/
+		background-color: rgba(33,150,243,0);
+		width: 100%;
+	}
+	/* #drawer.paper-drawer-panel > [drawer] {
+    background-color: inherit;
+	} */
+	#div-background {
+		margin: 16px;
+		max-width: 652px;
+	}
+	#zagolovok {
+		--iron-image-width: 100%;
+	}
+	paper-icon-button::shadow iron-icon {
+		height: 24px !important;
+		width: 24px !important;
+	}
+	paper-item {
+		--paper-item : {
+			cursor: pointer;
+		};
+	}
+	#mainToolbar {
+		box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14),
+		0 3px 14px 2px rgba(0, 0, 0, 0.12),
+		0 5px 5px -3px rgba(0, 0, 0, 0.4);
+	}
+	@media all and (min-width: 0) and (max-width: 600px) {
+		#main_tabs {
+			display: none;
+		}
+	}
+	#authErrorToast {
+		--paper-toast-background-color: red;
+		--paper-toast-color: white;
+	}
+	#arrowUp {
+		position: fixed;
+		bottom: 4px;
+		right: 16px;
+	}
+</style><body unresolved=""><span id="browser-sync-binding"></span><template is="dom-bind" id="app"><x-route route="{{route}}" data="{{data}}" sub-data="{{subData}}"></x-route><firebase-app api-key="AIzaSyC3netPDxkVjuDOnoM7rLePlkWtLd1WvN8" auth-domain="uomgo-fab6c.firebaseapp.com" database-url="https://uomgo-fab6c.firebaseio.com" name="uomgo"></firebase-app><paper-drawer-panel id="paperDrawerPanel" responsive-width="1280px"><paper-scroll-header-panel drawer="" style="background-color: white;"><x-drawer-menu route="{{route}}" data="{{data}}" sub-data="{{subData}}"></x-drawer-menu></paper-scroll-header-panel><paper-scroll-header-panel id="headerPanelMain" main="" condenses="" header-height="256" condensed-header-height="64" noreveal="true"><paper-toolbar id="mainToolbar" class="tall"><div class="app-name"></div><div class="middle middle-container fit layout horizontal center-center"><x-header-text></x-header-text></div><div class="bottom bottom-container self-end fit"><paper-icon-button id="paperToggle" icon="menu" paper-drawer-toggle=""></paper-icon-button><div class="spacer"></div><paper-tabs id="main_tabs" selected="{{data.page}}" attr-for-selected="data-route" scrollable=""><paper-tab data-route="main">Главная</paper-tab><paper-tab data-route="about">Об управлении</paper-tab><paper-tab data-route="virt">Обращения граждан</paper-tab></paper-tabs><paper-icon-button icon="perm-identity" on-tap="loginTap"></paper-icon-button><paper-icon-button icon="search" on-tap="openSearchDialog" disabled=""></paper-icon-button><iron-icon class="bottom bookmark" icon="bookmark"></iron-icon></div></paper-toolbar><div class="container" id="pagesContainer"><firebase-auth id="auth" user="{{user}}" provider="google" app-name="uomgo" on-error="showError"></firebase-auth><x-app-pages route="{{route}}" data="{{data}}" sub-data="{{subData}}"></x-app-pages></div><x-footer></x-footer></paper-scroll-header-panel></paper-drawer-panel><paper-fab id="arrowUp" icon="arrow-upward" mini="true" class="blue" on-tap="scrollPageToTop"></paper-fab><paper-toast id="authErrorToast" style="max-width: 300px;" horizontal-align="right" vertical-align="top" duration="0" text="Ошибка входа. [[error.code]]: [[error.message]]"><paper-icon-button icon="done" on-tap="toggleAuthErrorToast"></paper-icon-button></paper-toast><iron-scroll-threshold id="scrollThreshold" upper-threshold="192" lower-threshold="500" on-lower-threshold="_loadMoreData" on-upper-threshold="showArrow"></iron-scroll-threshold></template><script src="scripts/app.js"></script><script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-98969361-1', 'auto');
+	  ga('send', 'pageview');
+
+	</script></body></html>

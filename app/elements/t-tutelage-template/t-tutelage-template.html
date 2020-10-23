@@ -1,0 +1,210 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="t-tutelage-template">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+				word-wrap: break-word;
+				/*word-break: break-all;*/
+			}
+			paper-card {
+				width: 100%;
+				border-radius: 8px;
+				--paper-card-header-text: {
+					text-align: center;
+				};
+				--paper-card-content: {
+				};
+			}
+			iron-collapse:focus {
+				outline: none;
+			}
+			.collapse-content {
+				padding: 15px;
+				background-color: white;
+			}
+			.accordeonHeader {
+				padding: 0 8px;
+				cursor: pointer;
+			}
+			.accordeonBox {
+				padding: 8px 0;
+				background-color: var(--paper-blue-grey-50);
+			}
+		</style>
+
+		<firebase-document id="firebaseDocument"
+			app-name="uomgo"
+			path="/sections/tutelage"
+			data="{{docData}}">
+		</firebase-document>
+
+		<paper-card heading="Отдел опеки и попечительства"
+			image=""
+			elevation="4"
+			animated-shadow="false">
+
+				<div class="card-content">
+
+					<div class="content">
+
+						<template
+							is="juicy-html"
+							content$="[[docData.text]]">
+						</template>
+
+						<div class="accordeonBox">
+							<div class="accordeonHeader paper-font-headline"
+								aria-expanded$="[[isExpanded(openedLaws)]]"
+								aria-controls="laws"
+								on-tap="toggle" data-args="#laws">
+									Законодательная база
+							</div>
+							<iron-collapse id="laws"
+								tabindex="0"
+								opened="{{openedLaws}}">
+									<div class="collapse-content shadow">
+										<template
+											is="juicy-html"
+											content$="[[docData.laws.text]]">
+										</template>
+									</div>
+							</iron-collapse>
+						</div>
+
+						<div class="accordeonBox">
+							<div class="accordeonHeader paper-font-headline"
+								aria-expanded$="[[isExpanded(openedFormsOfFamily)]]"
+								aria-controls="formsOfFamily"
+								on-tap="toggle" data-args="#formsOfFamily">
+									Формы семейного устройства:
+							</div>
+							<iron-collapse id="formsOfFamily"
+								tabindex="0"
+								opened="{{openedFormsOfFamily}}">
+									<div class="collapse-content shadow">
+										<template
+											is="juicy-html"
+											content$="[[docData.formsOfFamily.text]]">
+										</template>
+									</div>
+							</iron-collapse>
+						</div>
+
+						<div class="accordeonBox">
+							<div class="accordeonHeader paper-font-headline"
+								aria-expanded$="[[isExpanded(openedLegitimation)]]"
+								aria-controls="legitimation"
+								on-tap="toggle" data-args="#legitimation">
+									Усыновление
+							</div>
+							<iron-collapse id="legitimation"
+								tabindex="0"
+								opened="{{openedLegitimation}}">
+									<div class="collapse-content shadow">
+										<template
+											is="juicy-html"
+											content$="[[docData.legitimation.text]]">
+										</template>
+									</div>
+							</iron-collapse>
+						</div>
+
+						<div class="accordeonBox">
+							<div class="accordeonHeader paper-font-headline"
+								aria-expanded$="[[isExpanded(openedDealings)]]"
+								aria-controls="dealings"
+								on-tap="toggle" data-args="#dealings">
+									Сделки
+							</div>
+							<iron-collapse id="dealings"
+								tabindex="0"
+								opened="{{openedDealings}}">
+									<div class="collapse-content shadow">
+										<template
+											is="juicy-html"
+											content$="[[docData.dealings.text]]">
+										</template>
+									</div>
+							</iron-collapse>
+						</div>
+
+						<div class="accordeonBox">
+							<div class="accordeonHeader paper-font-headline"
+								aria-expanded$="[[isExpanded(openedInformation)]]"
+								aria-controls="information"
+								on-tap="toggle" data-args="#information">
+									Информация для граждан
+							</div>
+							<iron-collapse id="information"
+								tabindex="0"
+								opened="{{openedInformation}}">
+									<div class="collapse-content shadow">
+										<template
+											is="juicy-html"
+											content$="[[docData.information.text]]">
+										</template>
+									</div>
+							</iron-collapse>
+						</div>
+
+						<div class="accordeonBox">
+							<div class="accordeonHeader paper-font-headline"
+								aria-expanded$="[[isExpanded(openedMama)]]"
+								aria-controls="mama"
+								on-tap="toggle" data-args="#mama">
+									Мама, найди меня!
+							</div>
+							<iron-collapse id="mama"
+								tabindex="0"
+								opened="{{openedMama}}">
+									<div class="collapse-content shadow">
+										<template
+											is="juicy-html"
+											content$="[[docData.mama.text]]">
+										</template>
+									</div>
+							</iron-collapse>
+						</div>
+
+						<div class="accordeonBox">
+							<div class="accordeonHeader paper-font-headline"
+								aria-expanded$="[[isExpanded(openedSeptember)]]"
+								aria-controls="september"
+								on-tap="toggle" data-args="#september">
+									Акция «Первое сентября – каждому школьнику!»
+							</div>
+							<iron-collapse id="september"
+								tabindex="0"
+								opened="{{openedSeptember}}">
+									<div class="collapse-content shadow">
+										<template
+											is="juicy-html"
+											content$="[[docData.september.text]]">
+										</template>
+									</div>
+							</iron-collapse>
+						</div>
+
+					</div>
+				</div>
+		</paper-card>
+
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 't-tutelage-template',
+			toggle: function(e) {
+		    document.querySelector( e.target.getAttribute('data-args') ).toggle();
+		  },
+			isExpanded: function(opened) {
+				return String(opened);
+			}
+		});
+	})();
+	</script>
+</dom-module>

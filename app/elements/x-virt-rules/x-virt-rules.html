@@ -1,0 +1,89 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="x-virt-rules">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+				word-wrap: break-word;
+				/*word-break: break-all;*/
+			}
+			paper-card {
+				/*width: 100%;*/
+				border-radius: 8px;
+				--paper-card: {
+		      width: 100%;
+		    };
+				--paper-card-header-text: {
+					text-align: center;
+				};
+				--paper-card-content: {
+				};
+			}
+			.card-header {
+				padding: 16px 16px 0;
+			}
+			paper-button {
+				background-color: rgba(0,230,118,0.5);
+				border-radius: 8px;
+				color: black;
+				margin: auto;
+				width: 100%;
+			}
+			paper-button:hover {
+				background-color: var(--paper-green-a400);
+			}
+		</style>
+
+		<firebase-document id="firebaseDocument"
+			data="{{docData}}"
+			path="/virt/rules"
+			app-name="uomgo">
+		</firebase-document>
+
+		<paper-card image=""
+			elevation="4"
+			animated-shadow="false">
+
+				<div class="card-header">
+					<paper-button
+						raised
+						on-tap="changePage">
+							<div class="flex"></div>
+							Обратиться
+							<div class="flex"></div>
+							<iron-icon icon="check"></iron-icon>
+					</paper-button>
+				</div>
+
+				<div class="card-content">
+					<template
+						is="juicy-html"
+						content$="[[docData.text]]">
+					</template>
+				</div>
+
+		</paper-card>
+
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 'x-virt-rules',
+			properties: {
+				subPage: {
+					type: Object,
+					notify: true
+				}
+			},
+			changePage: function() {
+				this.async(function() {
+					this.set('subPage', 'messages');
+				});
+			}
+		});
+	})();
+	</script>
+</dom-module>

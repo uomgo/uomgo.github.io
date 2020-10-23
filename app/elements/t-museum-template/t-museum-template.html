@@ -1,0 +1,132 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="t-museum-template">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+				word-wrap: break-word;
+				/*word-break: break-all;*/
+			}
+			paper-card {
+				width: 100%;
+				border-radius: 8px;
+				--paper-card-header-text: {
+					text-align: center;
+				};
+				--paper-card-content: {
+				};
+			}
+			iron-collapse:focus {
+				outline: none;
+			}
+			.collapse-content {
+				padding: 15px;
+				background-color: white;
+			}
+			.accordeonHeader {
+				padding: 0 8px;
+				cursor: pointer;
+			}
+			.accordeonBox {
+				padding: 8px 0;
+				background-color: var(--paper-blue-grey-50);
+			}
+		</style>
+
+
+		<firebase-document id="firebaseDocument"
+			app-name="uomgo"
+			path="/museum"
+			data="{{docData}}">
+		</firebase-document>
+
+		<paper-card heading="Виртуальный музей"
+			image=""
+			elevation="4"
+			animated-shadow="false">
+
+				<div class="card-content">
+
+					<template
+						is="juicy-html"
+						content$="[[docData.text]]">
+					</template>
+
+					<div class="accordeonBox">
+						<div class="accordeonHeader paper-font-headline"
+							aria-expanded$="[[isExpanded(openedHistory)]]"
+							aria-controls="history"
+							on-tap="toggle" data-args="#history">
+								История развития муниципальной системы образования МГО
+						</div>
+						<iron-collapse id="history"
+							tabindex="0"
+							opened="{{openedHistory}}">
+								<div class="collapse-content shadow">
+									<template
+										is="juicy-html"
+										content$="[[docData.history.text]]">
+									</template>
+								</div>
+						</iron-collapse>
+					</div>
+
+					<div class="accordeonBox">
+						<div class="accordeonHeader paper-font-headline"
+							aria-expanded$="[[isExpanded(openedHistoryOrgs)]]"
+							aria-controls="historyOrgs"
+							on-tap="toggle" data-args="#historyOrgs">
+								История образовательных организаций города
+						</div>
+						<iron-collapse id="historyOrgs"
+							tabindex="0"
+							opened="{{openedHistoryOrgs}}">
+								<div class="collapse-content shadow">
+									<template
+										is="juicy-html"
+										content$="[[docData.historyOrgs.text]]">
+									</template>
+								</div>
+						</iron-collapse>
+					</div>
+
+					<div class="accordeonBox">
+						<div class="accordeonHeader paper-font-headline"
+							aria-expanded$="[[isExpanded(openedHistoryFame)]]"
+							aria-controls="fame"
+							on-tap="toggle" data-args="#fame">
+								Доска почёта
+						</div>
+						<iron-collapse id="fame"
+							tabindex="0"
+							opened="{{openedHistoryFame}}">
+								<div class="collapse-content shadow">
+									 <template
+									 	is="juicy-html"
+										content$="[[docData.fame.text]]">
+									</template>
+								</div>
+						</iron-collapse>
+					</div>
+
+				</div>
+		</paper-card>
+
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 't-museum-template',
+			toggle: function(e) {
+		    document.querySelector( e.target.getAttribute('data-args') ).toggle();
+		  },
+			isExpanded: function(opened) {
+				return String(opened);
+			}
+		});
+	})();
+	</script>
+</dom-module>

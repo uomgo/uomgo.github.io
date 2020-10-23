@@ -1,0 +1,178 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="t-main-template">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+				word-wrap: break-word;
+				margin: 32px 0;
+			}
+			#collapsePanel {
+				background-color: #00E676;
+				position: fixed;
+				top: calc(50vh - 68px);
+				right: -178px;
+				width: 200px;
+				height: 134px;
+				border-radius: 8px 0 0 8px;
+				border: 1px solid #ddd;
+				box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14),
+										0 3px 14px 2px rgba(0, 0, 0, 0.12),
+										0 5px 5px -3px rgba(0, 0, 0, 0.4);
+				font-weight: 500;
+				-webkit-transition: right 0.5s;
+				transition: right 0.5s;
+				cursor: pointer;
+				z-index: 1001;
+			}
+			#collapsePanel:hover {
+				right: 0px;
+			}
+			#verticalText {
+				position: absolute;
+				height: 100%;
+				width: 134px;
+				margin: 4px;
+				transform: rotate(-90deg);
+				align-self: center;
+				text-align: center;
+			}
+			#add {
+				position: fixed;
+				bottom: 48px;
+				right: 16px;
+			}
+		</style>
+
+		<firebase-auth id="auth"
+			user="{{user}}"
+			provider="google"
+			app-name="uomgo"
+			on-error="showError">
+		</firebase-auth>
+
+		<div id="collapsePanel" class="layout horizontal">
+			<div id="verticalText">
+				План работы УОМГО
+			</div>
+			<div class="content layout vertical center-center">
+				<paper-button
+					on-tap="_goToDocs"
+					raised
+					style="margin-left: 32px; text-align: center;">
+					Перейти в раздел документы
+					<iron-icon icon="arrow-forward"></iron-icon>
+				</paper-button>
+			</div>
+		</div>
+
+		<firebase-document id="firebaseDocument"
+			app-name="uomgo">
+		</firebase-document>
+
+		<x-messages></x-messages>
+		<x-posts></x-posts>
+
+		<template is="dom-if" if="[[user]]">
+			<paper-fab id="add"
+				icon="add"
+				mini="true"
+				class="green">
+			</paper-fab>
+		</template>
+
+		<x-post-edit-dialog></x-post-edit-dialog>
+
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 't-main-template',
+			properties: {
+				route: {
+					type: Object,
+					notify: true
+				},
+				dataPage: {
+					type: String,
+					notify: true
+				},
+				subPage: {
+					type: String,
+					notify: true
+				},
+				dataDB: {
+					type: Object,
+					observer: 'dataChanged',
+					notify: true
+				},
+				postData: {
+					type: Object,
+					value: {}
+				}
+			},
+			ready: function() {
+				var firebaseDocument = this.$.firebaseDocument;
+				var scrollHeaderPanel = document.querySelector('paper-scroll-header-panel');
+				var collapsePanel = this.querySelector('#collapsePanel');
+				scrollHeaderPanel.addEventListener('content-scroll', function() {
+					if (scrollThreshold._scrollTop > 192) {
+						collapsePanel.hidden = true;
+					} else {
+						collapsePanel.hidden = false;
+					}
+				});
+			},
+			editPostDialogOpen: function(e) {
+				this.postData = {};
+				if (e.model !== undefined) {
+					this.postData = Object.assign({}, e.model.post);
+				};
+				editPostDialog.toggle();
+			},
+			deletePostDialogOpen: function(e) {
+				this.postData = {};
+				if (e.model !== undefined) {
+					this.postData = Object.assign({}, e.model.post);
+				};
+				deletePostDialog.toggle();
+			},
+			_savePost: function() {
+				delete firebaseDocument.data;
+				if ( this.postData['name'] !== undefined ) {
+					firebaseDocument.data['name'] = this.postData['name'];
+				};
+				if ( this.postData['video-id'] !== undefined ) {
+					firebaseDocument.data['video-id'] = this.postData['video-id'];
+				};
+				if ( this.postData['text'] !== undefined ) {
+					firebaseDocument.data['text'] = this.postData['text'];
+				};
+				if ( this.postData['date'] !== undefined ) {
+					firebaseDocument.data['date'] = this.postData['date'];
+				};
+				if (this.postData.$key !== undefined) {
+					firebaseDocument.save("/posts", this.postData.$key);
+				} else firebaseDocument.save("/posts");
+			},
+			_deletePost: function() {
+				var key = this.postData.$key;
+				firebaseDocument.data = Object.assign({}, null);
+				firebaseDocument.save("/posts", key);
+			},
+			_computePath: function(key) {
+				return "/posts/" + key;
+			},
+			_goToDocs: function() {
+				this.async(function() {
+					this.set('dataPage', 'about');
+					this.set('subPage', 'docs');
+				});
+			}
+		});
+	})();
+	</script>
+</dom-module>

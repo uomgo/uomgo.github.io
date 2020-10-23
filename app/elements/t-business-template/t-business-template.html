@@ -1,0 +1,154 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="t-business-template">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+				word-wrap: break-word;
+				/*word-break: break-all;*/
+			}
+			paper-card {
+				width: 100%;
+				border-radius: 8px;
+				--paper-card-header-text: {
+					text-align: center;
+				};
+				--paper-card-content: {
+				};
+			}
+			#table {
+				--default-primary-color: red;
+				/*font-family: 'Roboto', 'Noto', sans-serif;*/
+				--iron-data-table-header: {
+					background-color: var(--paper-light-blue-900);
+					color: var(--paper-grey-50);
+					/*font-size: 1.2em;*/
+					font-weight: 400;
+					z-index: auto;
+					padding: 2px 0;
+				}
+				--iron-data-table-row: {
+					height: auto;
+					padding: 1px 0;
+				}
+				--iron-data-table-row-odd: {
+					background-color: #fff;
+				}
+				--iron-data-table-row-even: {
+					background-color: #fafafa;
+				}
+				--iron-data-table-row-hover: {
+					background-color: #eee !important;
+				}
+				--iron-data-table-row-selected: {
+					/*background-color: var(--default-primary-color) !important;
+					color: #fff;*/
+					background-color: var(--paper-light-blue-a100);
+					color: black;
+				}
+				--iron-data-table-row-after: {
+					background-color: #fff;
+					bottom: 16px;
+					content: "";
+					height: 2px;
+					left: 13px;
+					pointer-events: none;
+					position: absolute;
+					right: 0px;
+					transition: all 1s ease-in-out;
+					-webkit-transform: scaleX(0.0);
+					transform: scaleX(0.0);
+					z-index: 1;
+				}
+			}
+			#table data-table-cell[header] {
+				height: auto;
+			}
+			#table data-table-cell:not([header]) {
+				height: auto;
+			}
+			#table data-table-checkbox {
+				height: auto;
+			}
+		</style>
+
+
+		<firebase-document id="firebaseDocument"
+			app-name="uomgo"
+			path="/business"
+			data="{{docData}}">
+		</firebase-document>
+
+		<paper-card
+			heading="Реестр индивидуальных предпринимателей оказывающих образовательные услуги для детей дошкольного возраста на территории Мысковского городского округа"
+			image=""
+			elevation="4"
+			animated-shadow="false">
+				<div class="card-content">
+					<div class="content">
+
+						<template is="juicy-html"	content$="[[docData.text]]"></template>
+
+						<iron-data-table id="table"
+							items="[[docData.table]]"
+							selection-enabled
+							multi-selection>
+
+								<data-table-column
+									name="№"
+									width="20px"
+									flex="0">
+										<template>[[index]]</template>
+								</data-table-column>
+
+								<data-table-column
+									name="Ф.И.О."
+									width="150px"
+									sort-by="name">
+										<template>[[item.name]]</template>
+								</data-table-column>
+
+								<data-table-column
+									name="Свидетельство о регистрации"
+									width="130px"
+									sort-by="certificate">
+										<template>[[item.certificate]]</template>
+								</data-table-column>
+
+								<data-table-column
+									name="ОКВЭД"
+									sort-by="OKVED">
+										<template>[[item.OKVED]]</template>
+								</data-table-column>
+
+								<data-table-column
+									name="Телефон, e-mail"
+									width="180px"
+									sort-by="phone">
+										<template>[[item.phone]]</template>
+								</data-table-column>
+
+								<data-table-column
+									name="Виды услуг"
+									width="180px">
+										<template>[[item.services]]</template>
+								</data-table-column>
+
+						</iron-data-table>
+
+					</div>
+				</div>
+		</paper-card>
+
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 't-business-template'
+		});
+	})();
+	</script>
+</dom-module>

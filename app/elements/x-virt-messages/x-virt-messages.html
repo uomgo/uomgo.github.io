@@ -1,0 +1,546 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="x-virt-messages">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+				word-wrap: break-word;
+				/*word-break: break-all;*/
+			}
+			paper-card {
+				width: 100%;
+				border-radius: 8px;
+				margin-bottom: 16px;
+				--paper-card-header-text: {
+					text-align: center;
+				};
+				--paper-card-content: {
+				};
+			}
+			paper-icon-button.edit {
+				/*--paper-icon-button-ink-color: white;*/
+				--paper-icon-button: {
+					width: 24px;
+					height: 24px;
+					background-color: white;
+					color: var(--paper-green-a700);
+					border-radius: 3px;
+					padding: 0px;
+				}
+				--paper-icon-button-hover: {
+					background-color: var(--paper-green-a400);
+					color: black;
+				}
+			}
+			paper-icon-button.delete {
+				/*--paper-icon-button-ink-color: black;*/
+				--paper-icon-button: {
+					width: 24px;
+					height: 24px;
+					background-color: white;
+					color: var(--paper-red-500);
+					border-radius: 3px;
+					padding: 0px;
+				}
+				--paper-icon-button-hover: {
+					background-color: var(--paper-red-500);
+					color: white;
+				}
+			}
+			paper-button.custom {
+				--paper-button-ink-color: var(--paper-green-a200);
+				/* These could also be individually defined for each of the
+					specific css classes, but we'll just do it once as an example */
+				--paper-button-flat-keyboard-focus: {
+					background-color: var(--paper-green-a200);
+					color: white !important;
+				};
+				--paper-button-raised-keyboard-focus: {
+					background-color: var(--paper-green-a200) !important;
+					color: white !important;
+				};
+			}
+			paper-button.custom:hover {
+				background-color: var(--paper-green-400);
+			}
+			paper-button.green {
+				background-color: var(--paper-green-500);
+				color: white;
+			}
+			paper-button.green[disabled] {
+				color: white;
+				background-color: var(--paper-grey-500);
+			}
+			#recaptcha {
+				margin: auto;
+		    padding: 16px 0 0;
+		    width: 100%;
+			}
+			@media all and (min-width: 0) and (max-width: 320px) and (orientation: portrait) {
+				#recaptcha {
+					transform:scale(0.74);
+					-webkit-transform:scale(0.74);
+					transform-origin:0 0;
+					-webkit-transform-origin:0 0;
+				}
+			}
+			@media all and (min-width: 321px) and (max-width: 360px) and (orientation: portrait) {
+				#recaptcha {
+					transform:scale(0.88);
+					-webkit-transform:scale(0.88);
+					transform-origin:0 0;
+					-webkit-transform-origin:0 0;
+				}
+			}
+			@media all and (min-width: 361px) and (max-width: 375px) and (orientation: portrait) {
+				#recaptcha {
+					transform:scale(0.92);
+					-webkit-transform:scale(0.92);
+					transform-origin:0 0;
+					-webkit-transform-origin:0 0;
+				}
+			}
+			@media all and (min-width: 376px) and (max-width: 384px) and (orientation: portrait) {
+				#recaptcha {
+					transform:scale(0.96);
+					-webkit-transform:scale(0.96);
+					transform-origin:0 0;
+					-webkit-transform-origin:0 0;
+				}
+			}
+			.formElement {
+				margin: 0 16px;
+			}
+			paper-item {
+				cursor: pointer;
+			}
+		</style>
+
+		<firebase-auth id="auth"
+			user="{{user}}"
+			provider="google"
+			app-name="uomgo"
+			on-error="showError">
+		</firebase-auth>
+
+		<firebase-document id="firebaseDocument"
+			data="{{docData}}"
+			app-name="uomgo">
+		</firebase-document>
+
+		<firebase-query id="firebaseQuery"
+			path="/virt/messages"
+			app-name="uomgo"
+			data="{{data}}">
+		</firebase-query>
+
+		<template is="dom-if" if="[[user]]">
+			<div class="layout horizontal end-justified wrap">
+				<paper-toggle-button
+					checked="{{show}}"
+					class="shadow"
+					style="margin-top: 0px; cursor: pointer;">
+						<span hidden$="[[!show]]">Отображать</span>
+						<span hidden$="[[show]]">Скрывать</span>
+						<span>удаленные</span>
+				</paper-toggle-button>
+			</div>
+		</template>
+
+		<template id="formDomIf"
+			is="dom-if"
+			if="[[!user]]"
+			restamp
+			on-dom-change="_formChanged">
+				<form id="form"
+					is="iron-form"
+					on-iron-form-presubmit="_presubmit">
+
+						<paper-card
+							heading="Форма обращения"
+							elevation="4">
+								<div class="card-content">
+									<div id="formLayout" class="layout horizontal center-center wrap">
+
+										<paper-input class="formElement"
+											name="firstname"
+											label="Фамилия"
+											required
+											auto-validate>
+										</paper-input>
+
+										<paper-input class="formElement"
+											name="secondname"
+											label="Имя"
+											required
+											auto-validate>
+										</paper-input>
+
+										<paper-input class="formElement"
+											name="lastname"
+											label="Отчество"
+											required
+											auto-validate>
+										</paper-input>
+
+										<gold-email-input class="formElement"
+											name="email"
+											label="E-mail"
+											auto-validate
+											required>
+										</gold-email-input>
+
+										<paper-dropdown-menu class="formElement"
+											label="Тема">
+												<paper-menu class="dropdown-content"
+													selected="{{selected}}">
+														<template
+															is="dom-repeat"
+															items="[[themes]]"
+															as="theme">
+																<paper-item>
+																	[[theme]]
+																</paper-item>
+														</template>
+												</paper-menu>
+										</paper-dropdown-menu>
+
+										<input id="dropdownMenuInput"
+											is="iron-input"
+											name="theme"
+											type="hidden"
+											value="[[selected]]">
+										</input>
+
+									</div>
+
+									<paper-textarea required
+                    id="#text"
+                    name="text"
+										class="formElement"
+										auto-validate
+										label="Текст обращения">
+									</paper-textarea>
+
+									<!-- <div class="formElement">
+										<re-captcha id="recaptcha"
+											sitekey="6LfvTSkTAAAAAJddQYrmqJZB81BILzdaOOKjGGSq">
+										</re-captcha>
+									</div> -->
+
+								</div>
+
+								<div class="card-actions">
+									<div class="content layout horizontal wrap">
+										<paper-button id="submit"
+											class="custom green"
+											raised
+											on-tap="_submit">
+												<iron-icon icon="check"></iron-icon>
+												Отправить
+										</paper-button>
+										<div class="spacer"></div>
+									</div>
+								</div>
+
+						</paper-card>
+
+				</form>
+		</template>
+
+		<div id="messages">
+			<template id="domRepeat"
+				is="dom-repeat"
+				items="[[data]]"
+				as="val"
+				sort="_computeSort"
+				filter="_filter"
+				observe="deleted"
+				target-framerate="60">
+
+					<paper-card heading="" elevation="4">
+						<div class="card-content">
+							<div class="element">
+
+								<grid-element ga="16px" center>
+									<grid-col>
+										<strong>
+											Дата:
+										</strong><br>
+										<moment-js
+											date="[[val.date]]"
+											format="DD.MM.YYYYг.">
+										</moment-js>
+									</grid-col>
+									<grid-col>
+										<strong>
+											Отправитель:
+										</strong><br>
+										[[val.name]]
+									</grid-col>
+									<grid-col>
+										<strong>
+											E-mail:
+										</strong><br>
+										[[val.email]]
+									</grid-col>
+									<grid-col>
+										<strong>
+											Тема:
+										</strong><br>
+										[[val.theme]]
+									</grid-col>
+								</grid-element>
+
+								<grid-element ga="16px" center>
+									<grid-col>
+										[[val.text]]
+									</grid-col>
+								</grid-element>
+
+								<template id="replyDomIf"
+									is="dom-if"
+									if="[[val.reply]]">
+										<hr>
+										<grid-element ga="16px" center>
+											<grid-col>
+												<b>
+													<moment-js
+														date="[[val.replyDate]]"
+														format="DD.MM.YYYYг.">
+													</moment-js>
+												</b>
+											</grid-col>
+										</grid-element>
+
+										<grid-element class="textReply"
+											hidden$="[[!val.reply]]"
+											ga="16px"
+											center>
+												<grid-col>
+													<b>
+														[[val.reply]]
+													</b>
+												</grid-col>
+										</grid-element>
+								</template>
+								<grid-element class="textReplyEdit"
+									hidden
+									ga="16px"
+									center>
+										<grid-col>
+											<paper-textarea class="textarea"
+												label="Ответ"
+												value="[[val.reply]]">
+											</paper-textarea>
+										</grid-col>
+								</grid-element>
+
+							</div>
+						</div>
+
+						<template is="dom-if" if="[[user]]">
+							<div class="card-actions">
+								<div class="content layout horizontal wrap">
+
+									<paper-button class="saveButton custom green"
+										raised
+										hidden
+										on-tap="save">
+											<iron-icon icon="check"></iron-icon>
+											<span>Ok!</span>
+									</paper-button>
+
+									<div class="spacer"></div>
+
+									<div class="buttonBox content layout horizontal center-center wrap">
+
+										<paper-icon-button class="edit"
+											icon="image:edit"
+											on-tap="edit">
+										</paper-icon-button>
+
+										<paper-icon-button class="delete"
+											icon="delete"
+											on-tap="delete">
+										</paper-icon-button>
+
+									</div>
+								</div>
+							</div>
+						</template>
+					</paper-card>
+
+			</template>
+		</div>
+
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 'x-virt-messages',
+			properties: {
+				data: {
+					type: Object
+				},
+				docData: {
+					type: Object
+				},
+				themes: {
+					type: Object,
+					readOnly: true,
+					value: ['Жалоба','Предложение','Благодарность','Прочее']
+				},
+				hide: {
+					type: Boolean,
+					value: false
+				},
+				messageKey: String,
+				selected: {
+					type: Number,
+					value: 3
+				},
+				show: {
+					type: Boolean,
+					value: false,
+					observer: '_showChanged'
+				}
+			},
+			ready: function() {
+			},
+			_computeSort: function(a, b) {
+				if (a.date == b.date) {
+					return 0;
+				}
+				return a.date > b.date ? -1 : 1;
+			},
+			edit: function(e) {
+				var fireDoc = this.$.firebaseDocument;
+				var parent = e.currentTarget.offsetParent.offsetParent;
+				var textReply = parent.querySelector('.textReply');
+				var textReplyEdit = parent.querySelector('.textReplyEdit');
+				var saveButton = parent.querySelector('.saveButton');
+				if (textReply) {
+					textReply.hidden = true;
+				}
+				textReplyEdit.hidden = false;
+				saveButton.hidden = false;
+			},
+			save: function(e) {
+				var domRepeat = this.$.domRepeat;
+				var today = new Date();
+				var fireDoc = this.$.firebaseDocument;
+				var parent = e.currentTarget.offsetParent.offsetParent;
+				var textReply = parent.querySelector('.textReply');
+				var textReplyEdit = parent.querySelector('.textReplyEdit');
+				var textarea = parent.querySelector('.textarea');
+				var saveButton = parent.querySelector('.saveButton');
+				var modelForElement = domRepeat.modelForElement(e.target);
+				var key = modelForElement.val.$key;
+				var docData = Object.assign({}, modelForElement.val);
+				delete docData.$key;
+				if (textarea.value) {
+					if (!docData.replyDate) {
+						docData.replyDate = this._extractDate(today);
+					};
+					docData.reply = textarea.value;
+				} else {
+					delete docData.replyDate;
+				};
+				this.docData = Object.assign({}, docData);
+				fireDoc.saveValue('/virt/messages/', key);
+				if (textReply) {
+					textReply.hidden = false;
+				}
+				textReplyEdit.hidden = true;
+				saveButton.hidden = true;
+				this.messageKey = "";
+			},
+			delete: function(e) {
+				var domRepeat = this.$.domRepeat;
+				var fireDoc = this.$.firebaseDocument;
+				var modelForElement = domRepeat.modelForElement(e.target);
+				var key = modelForElement.val.$key;
+				var docData = Object.assign({}, modelForElement.val);
+				fireDoc.path = "";
+				delete docData.$key;
+				docData.deleted = true;
+				this.docData = Object.assign({}, docData);
+				fireDoc.saveValue('/virt/messages/', key);
+			},
+			_extractDate: function(val) {
+				var ret;
+		    ret = val.getFullYear() + "-";
+		    if (val.getMonth() < 10) {
+		      ret += "0"+Number(val.getMonth()+1) + "-";
+		    } else if (val.getMonth() > 9) {
+		      ret += Number(val.getMonth()) + "-";
+		    };
+		    if (val.getDate() < 10) {
+		      ret += "0"+val.getDate();
+		    } else if (val.getDate() > 9) {
+		      ret += val.getDate();
+		    };
+		    return ret;
+			},
+			_presubmit: function (e) {
+				var today = new Date();
+				var form = this.querySelector('#form');
+				var fireDoc = this.querySelector('#firebaseDocument');
+				var formData = form.serialize();
+				this.docData = {};
+				this.docData.date = this._extractDate(today);
+				this.docData.deleted = false;
+				this.docData.name = formData.firstname;
+				this.docData.name += " "+ formData.secondname;
+				this.docData.name += " "+ formData.lastname;
+				this.docData.email = formData.email;
+				this.docData.text = formData.text;
+				this.docData.theme = this.themes[formData.theme];
+
+        form.elements.firstname.value=null;
+        form.elements.secondname.value=null;
+        form.elements.lastname.value=null;
+        form.elements.email.value=null;
+        form.elements.text.value=null;
+
+				// fireDoc.path = "/virt/messages/"
+				// e.preventDefault();
+
+				fireDoc.saveValue('/virt/messages/');
+
+				// this.docData = {};
+				// console.log(this.docData);
+			},
+			_submit: function() {
+				this.querySelector('#form').submit();
+			},
+			_filter: function(item) {
+				if (this.show) return true;
+				if (item.deleted) return false; else return true;
+			},
+			_showChanged: function(newValue, oldValue) {
+				this.$.domRepeat.render();
+			},
+			_formChanged: function(e) {
+				var element = e.target.parentElement;
+				// var recaptcha = element.querySelector('#recaptcha');
+				var submit = element.querySelector('#submit');
+				var dropdownMenuInput = element.querySelector('#dropdownMenuInput');
+				var paperMenu = element.querySelector('paper-menu');
+				// if (recaptcha) {
+				// 	recaptcha.addEventListener('captcha-response', function(e) {
+				// 		submit.disabled = false;
+				// 	});
+				// 	recaptcha.addEventListener('captcha-expired', function(e) {
+				// 		submit.disabled = true;
+				// 	});
+				// };
+			}
+		});
+	})();
+	</script>
+</dom-module>

@@ -1,0 +1,83 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="x-about-boss">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+				word-wrap: break-word;
+			}
+			img, iron-image {
+				width: 28%;
+				--iron-image-width: 100%;
+				--iron-image-placeholder : {
+					background-repeat: no-repeat;
+					background-size: inherit;
+					background-position: center;
+				}
+			}
+			paper-material {
+				max-width: 100%;
+				background-color: white;
+				border-radius: 0 0 8px 8px;
+			}
+			grid-element {
+				width: 100%;
+			}
+			grid-col {
+				text-align: center;
+			}
+		</style>
+
+		<firebase-document
+			path="/about"
+			app-name="uomgo"
+		  data="{{dataDB}}">
+		</firebase-document>
+
+		<paper-material class="layout horizontal center-center"
+			elevation="4">
+
+				<grid-element ga="16px" center>
+					<grid-col class="shadow" s="2">
+
+						<p class="paper-font-headline">
+							[[dataDB.boss.position]]
+						</p>
+
+						<template is="dom-if" if="[[dataDB.boss.photo.enabled]]">
+							<iron-image src="[[dataDB.boss.photo.image]]"
+								placeholder="[[app.baseUrl]]images/loading.gif"
+								prevent-load
+								contain
+								preload
+								fade>
+							</iron-image>
+						</template>
+
+						<p>[[dataDB.boss.name]]</p>
+					</grid-col>
+
+					<grid-col s="1" class="shadow">
+						<div>
+							<template
+								is="juicy-html"
+								content$="[[dataDB.boss.reception]]">
+							</template>
+						</div>
+					</grid-col>
+
+				</grid-element>
+
+		</paper-material>
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 'x-about-boss'
+		});
+	})();
+	</script>
+</dom-module>

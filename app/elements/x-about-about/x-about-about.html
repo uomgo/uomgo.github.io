@@ -1,0 +1,77 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="x-about-about">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+				word-wrap: break-word;
+			}
+			paper-material {
+				background-color: white;
+				border-radius: 0 0 8px 8px;
+			}
+			iron-image {
+				width: 100%;
+				--iron-image-width: 100%;
+			}
+			.content {
+				text-align: center;
+				width: 100%;
+			}
+		</style>
+		<paper-material elevation="4">
+			<div class="layout horizontal center-center wrap">
+				<div class="content">
+					<div class="paper-font-headline">
+						Мунициапальное казенное учреждение<br>
+						Управление образованием «Мысковского городского округа»
+					</div>
+				</div>
+			</div>
+			<div class="layout horizontal center-center wrap">
+
+				<div class="shadow" style="text-align: center">
+					<p><b>Адрес:</b></p>
+					<p>г. Мыски, ул. Серафимовича, 4</p>
+					<p><b>Режим работы:</b>
+					<p>с понедельника по четверг с <b>8 <sup><u>00</u></sup></b> до <b>17 <sup><u>00</u></sup></b></p>
+					<p>пятница с <b>8 <sup><u>00</u></sup></b> до <b>16 <sup><u>00</u></sup></b></p></p>
+					<p><b>Обед:</b> с <b>12 <sup><u>00</u></sup></b> до <b>12 <sup><u>48</u></sup></b></p>
+					<p><b>Телефон:</b> 8(38474)2-16-02</p>
+				</div>
+
+				<div class="shadow" style="width: 500px; height: 300px">
+					<google-map id="google_map"
+						api-key="AIzaSyC3netPDxkVjuDOnoM7rLePlkWtLd1WvN8"
+						map-type="roadmap"
+						latitude="53.713446"
+						longitude="87.807527"
+						zoom="15"
+						title="г. Мыски, ул. Серафимовича, 4"
+						fit-to-markers>
+							<google-map-marker
+								latitude="53.713446"
+								longitude="87.807527"></google-map-marker>
+					</google-map>
+				</div>
+
+				<div class="shadow" style="text-align: center;">
+					<iron-image
+						src='[[app.baseUrl]]images/administraciaBIG.jpg'>
+					</iron-image>
+				</div>
+
+			</div>
+		</paper-material>
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 'x-about-about'
+		});
+	})();
+	</script>
+</dom-module>

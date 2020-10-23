@@ -1,0 +1,125 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="t-legal-template">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+				word-wrap: break-word;
+				/*word-break: break-all;*/
+			}
+			paper-card {
+				width: 100%;
+				border-radius: 8px;
+				--paper-card-header-text: {
+					text-align: center;
+				};
+				--paper-card-content: {
+				};
+			}
+			/*iron-accordion {
+				background-color: var(--paper-blue-grey-50);
+			}
+			.paper-font-headline {
+				padding: 8px;
+			}
+			.accordionContent {
+				background-color: white;
+			}*/
+			iron-collapse:focus {
+				outline: none;
+			}
+			.collapse-content {
+				padding: 15px;
+				background-color: white;
+			}
+			.accordeonHeader {
+				padding: 0 8px;
+				cursor: pointer;
+			}
+			.accordeonBox {
+				padding: 8px 0;
+				background-color: var(--paper-blue-grey-50);
+			}
+		</style>
+
+		<firebase-document id="firebaseDocument"
+			app-name="uomgo"
+			path="/sections/legal"
+			data="{{docData}}">
+		</firebase-document>
+
+		<paper-card
+			heading="Организационно-правовой отдел"
+			image=""
+			elevation="4"
+			animated-shadow="false">
+
+			<div class="card-content">
+
+				<div class="content">
+
+					<template
+						is="juicy-html"
+						content$="[[docData.text]]">
+					</template>
+
+					<div class="accordeonBox">
+						<div class="accordeonHeader paper-font-headline"
+							aria-expanded$="[[isExpanded(openedNorm)]]"
+							aria-controls="norm"
+							on-tap="toggle" data-args="#norm">
+								Нормативно-правовая база:
+						</div>
+						 <iron-collapse id="norm"
+							tabindex="0"
+							opened="{{openedNorm}}">
+								<div class="collapse-content shadow">
+									<template
+										is="juicy-html"
+										content$="[[docData.norm.text]]">
+									</template>
+								</div>
+						 </iron-collapse>
+					</div>
+
+					<div class="accordeonBox">
+						<div class="accordeonHeader paper-font-headline"
+							aria-expanded$="[[isExpanded(openedProsecutor)]]"
+							aria-controls="prosecutor"
+							on-tap="toggle" data-args="#prosecutor">
+								Прокуратура разъясняет
+						</div>
+						 <iron-collapse id="prosecutor"
+							tabindex="0"
+							opened="{{openedProsecutor}}">
+								<div class="collapse-content shadow">
+									<template
+										is="juicy-html"
+										content$="[[docData.prosecutor.text]]">
+									</template>
+							 </div>
+						 </iron-collapse>
+					</div>
+
+				</div>
+			</div>
+		</paper-card>
+
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 't-legal-template',
+			toggle: function(e) {
+		    document.querySelector( e.target.getAttribute('data-args') ).toggle();
+		  },
+			isExpanded: function(opened) {
+				return String(opened);
+			}
+		});
+	})();
+	</script>
+</dom-module>

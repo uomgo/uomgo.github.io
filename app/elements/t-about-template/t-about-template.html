@@ -1,0 +1,138 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="t-about-template">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+			}
+			paper-tabs {
+				--paper-tabs: {
+					border-radius: 8px 8px 0 0;
+					background-color: var(--paper-green-a200);
+					box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14),
+											0 3px 14px 2px rgba(0, 0, 0, 0.12),
+											0 5px 5px -3px rgba(0, 0, 0, 0.4);
+				};
+			}
+			paper-material {
+				background-color: white;
+				border-radius: 8px 8px 0 0;
+			}
+		</style>
+
+		<paper-tabs id="tabs"
+			scrollable
+			selected="{{subPage}}"
+			attr-for-selected="data-route">
+
+			<paper-tab data-route="about">О нас</paper-tab>
+			<paper-tab data-route="boss">Руководство</paper-tab>
+			<paper-tab data-route="struct">Структура</paper-tab>
+			<paper-tab data-route="slave">Подведомственные организации</paper-tab>
+			<paper-tab data-route="docs">Документы</paper-tab>
+			<paper-tab data-route="localGov">Органы самоуправления</paper-tab>
+
+		</paper-tabs>
+
+		<animated-lazy-pages
+			attr-for-selected="data-route"
+			selected="{{subPage}}"
+			animate-initial-selection
+			fallback-selection="boss"
+			loading="{{loading}}">
+
+			<!-- <template  is="dom-if" if="[[loading]]">
+				<div class="layout horizontal center-center">
+					<paper-spinner-lite
+						active="[[loading]]"
+						alt="Загрузка ...">
+					</paper-spinner-lite>
+				</div>
+			</template> -->
+
+			<template is="animated-lazy-page" data-route="about">
+				<neon-animatable
+					entry-animation="fade-in-animation"
+					exit-animation="fade-out-animation"
+					animation-target>
+						<x-about-about></x-about-about>
+				</neon-animatable>
+			</template>
+
+			<template is="animated-lazy-page" data-route="boss">
+				<neon-animatable
+					entry-animation="fade-in-animation"
+					exit-animation="fade-out-animation"
+					animation-target>
+						<x-about-boss></x-about-boss>
+				</neon-animatable>
+			</template>
+
+			<template is="animated-lazy-page" data-route="struct">
+				<neon-animatable
+					entry-animation="fade-in-animation"
+					exit-animation="fade-out-animation"
+					animation-target>
+						<x-about-struct></x-about-struct>
+				</neon-animatable>
+			</template>
+
+			<template is="animated-lazy-page" data-route="slave">
+				<neon-animatable
+					entry-animation="fade-in-animation"
+					exit-animation="fade-out-animation"
+					animation-target>
+						<x-about-slave></x-about-slave>
+				</neon-animatable>
+			</template>
+
+			<template is="animated-lazy-page" data-route="docs">
+				<neon-animatable
+					entry-animation="fade-in-animation"
+					exit-animation="fade-out-animation"
+					animation-target>
+						<x-about-docs></x-about-docs>
+				</neon-animatable>
+			</template>
+
+			<template is="animated-lazy-page" data-route="localGov">
+				<neon-animatable
+					entry-animation="fade-in-animation"
+					exit-animation="fade-out-animation"
+					animation-target>
+						<x-about-local-gov></x-about-local-gov>
+				</neon-animatable>
+			</template>
+
+		</animated-lazy-pages>
+
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 't-about-template',
+			properties: {
+				route: {
+          type: Object,
+          notify: true
+        },
+        data: {
+					type: Object,
+					notify: true
+				},
+				subData: {
+					type: Object,
+					notify: true
+				},
+				subPage: {
+					type: String,
+					notify: true
+				}
+			}
+		});
+	})();
+	</script>
+</dom-module>

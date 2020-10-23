@@ -1,0 +1,153 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="t-jobs-template">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+				word-wrap: break-word;
+				/*word-break: break-all;*/
+			}
+			paper-card {
+				width: 100%;
+				border-radius: 8px;
+				--paper-card-header-text: {
+					text-align: center;
+				};
+				--paper-card-content: {
+				};
+			}
+			#table {
+				--default-primary-color: red;
+				/*font-family: 'Roboto', 'Noto', sans-serif;*/
+				--iron-data-table-header: {
+					background-color: var(--paper-light-blue-900);
+					color: var(--paper-grey-50);
+					/*font-size: 1.2em;*/
+					font-weight: 400;
+					z-index: auto;
+					padding: 2px 0;
+				}
+				--iron-data-table-row: {
+					height: auto;
+					padding: 1px 0;
+				}
+				--iron-data-table-row-odd: {
+					background-color: #fff;
+				}
+				--iron-data-table-row-even: {
+					background-color: #fafafa;
+				}
+				--iron-data-table-row-hover: {
+					background-color: #eee !important;
+				}
+				--iron-data-table-row-selected: {
+					/*background-color: var(--default-primary-color) !important;*/
+					/*color: #fff;*/
+					background-color: var(--paper-light-blue-a100);
+					color: black;
+				}
+				--iron-data-table-row-after: {
+					background-color: #fff;
+					bottom: 16px;
+					content: "";
+					height: 2px;
+					left: 13px;
+					pointer-events: none;
+					position: absolute;
+					right: 0px;
+					transition: all 1s ease-in-out;
+					-webkit-transform: scaleX(0.0);
+					transform: scaleX(0.0);
+					z-index: 1;
+				}
+			}
+			#table data-table-cell[header] {
+				height: auto;
+			}
+			#table data-table-cell:not([header]) {
+				height: auto;
+			}
+			#table data-table-checkbox {
+				height: auto;
+			}
+		</style>
+
+
+		<firebase-document id="firebaseDocument"
+			app-name="uomgo"
+			path="/jobs"
+			data="{{jobs}}">
+		</firebase-document>
+
+		<paper-card heading="Вакансии"
+			image=""
+			elevation="4"
+			animated-shadow="false">
+
+				<div class="card-content">
+
+					<template is="juicy-html"	content$="[[jobs.text]]"></template>
+
+					<iron-data-table id="table"
+						items="[[jobs.table]]"
+						selection-enabled
+						multi-selection>
+
+							<data-table-column
+								name="Организации"
+								sort-by="name"
+								width="224px"
+								flex="3">
+									<template>[[item.name]]</template>
+							</data-table-column>
+
+							<data-table-column
+								name="Вакансии"
+								sort-by="position"
+								width="134px"
+								flex="1">
+									<template>
+										<div class="position">
+											[[item.position]]
+										</div>
+									</template>
+							</data-table-column>
+
+							<data-table-column
+								name="Ставки"
+								flex="1" width="134px">
+									<template>[[item.rate]]</template>
+							</data-table-column>
+
+							<data-table-column
+								name="Контакты"
+								flex="1"
+								width="134px">
+									<template>
+										<template is="juicy-html"
+											content$="[[item.contact]]">
+										</template>
+									</template>
+							</data-table-column>
+
+					</iron-data-table>
+
+					<template is="juicy-html"
+						content$="[[jobs.footer]]">
+					</template>
+
+				</div>
+		</paper-card>
+
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 't-jobs-template'
+		});
+	})();
+	</script>
+</dom-module>

@@ -1,0 +1,233 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="t-inspect-template">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+				word-wrap: break-word;
+				/*word-break: break-all;*/
+			}
+			paper-card {
+				width: 100%;
+				border-radius: 8px;
+				--paper-card-content: {
+				};
+				--paper-card-header-text: {
+					text-align: center;
+				};
+			}
+			iron-collapse:focus {
+				outline: none;
+			}
+			.collapse-content {
+				padding: 15px;
+				background-color: white;
+			}
+			.accordeonHeader {
+				padding: 0 8px;
+				cursor: pointer;
+			}
+			.accordeonBox {
+				padding: 8px 0;
+				background-color: var(--paper-blue-grey-50);
+			}
+		</style>
+
+		<firebase-document id="firebaseDocument"
+			app-name="uomgo"
+			path="/sections/inspect"
+			data="{{docData}}">
+		</firebase-document>
+
+		<paper-card id="card"
+			heading="Отдел инспектирования качества образования"
+			image=""
+			elevation="4"
+			animated-shadow="false">
+
+				<div class="content">
+
+					<template is="juicy-html" content$="[[docData.text]]"></template>
+
+					<div class="accordeonBox">
+						<div class="accordeonHeader paper-font-headline"
+							aria-expanded$="[[isExpanded(openedFGOS)]]"
+							aria-controls="FGOS"
+							on-tap="toggle" data-args="#FGOS">
+								ФГОС
+						</div>
+						<iron-collapse id="FGOS"
+							tabindex="0"
+							opened="{{openedFGOS}}">
+								<div class="collapse-content shadow">
+									<template is="juicy-html"
+										content$="[[docData.FGOS.text]]">
+									</template>
+								</div>
+						</iron-collapse>
+					</div>
+
+					<div class="accordeonBox">
+						<div class="accordeonHeader paper-font-headline"
+							aria-expanded$="[[isExpanded(openedQualityControl)]]"
+							aria-controls="qualityControl"
+							on-tap="toggle" data-args="#qualityControl">
+								Оценка качества образования в ОО
+						</div>
+						<iron-collapse id="qualityControl"
+							tabindex="0"
+							opened="{{openedQualityControl}}">
+								<div class="collapse-content shadow">
+									<template is="juicy-html"
+										content$="[[docData.qualityControl.text]]">
+									</template>
+								</div>
+						</iron-collapse>
+					</div>
+
+					<div class="accordeonBox">
+						<div class="accordeonHeader paper-font-headline"
+							aria-expanded$="[[isExpanded(openedGIA)]]"
+							aria-controls="GIA"
+							on-tap="toggle" data-args="#GIA">
+								Государственная итоговая аттестация
+						</div>
+						<iron-collapse id="GIA"
+							tabindex="0"
+							opened="{{openedGIA}}">
+								<div class="collapse-content shadow">
+									<x-inspect-GIA doc-data="[[docData]]"></x-inspect-GIA>
+								</div>
+						</iron-collapse>
+					</div>
+
+					<div class="accordeonBox">
+						<div class="accordeonHeader paper-font-headline"
+							aria-expanded$="[[isExpanded(openedInclusive)]]"
+							aria-controls="inclusive"
+							on-tap="toggle" data-args="#inclusive">
+								Инклюзивное образование
+						</div>
+						<iron-collapse id="inclusive"
+							tabindex="0"
+							opened="{{openedInclusive}}">
+								<div class="collapse-content shadow">
+									<template is="juicy-html"
+										content$="[[docData.inclusive.text]]">
+									</template>
+								</div>
+						</iron-collapse>
+					</div>
+
+					<div class="accordeonBox">
+						<div class="accordeonHeader paper-font-headline"
+							aria-expanded$="[[isExpanded(openedRemote)]]"
+							aria-controls="remote"
+							on-tap="toggle" data-args="#remote">
+								Дистанционное образование
+						</div>
+						<iron-collapse id="remote"
+							tabindex="0"
+							opened="{{openedRemote}}">
+								<div class="collapse-content shadow">
+									<template is="juicy-html"
+										content$="[[docData.remote.text]]">
+									</template>
+								</div>
+						</iron-collapse>
+					</div>
+
+					<div class="accordeonBox">
+						<div class="accordeonHeader paper-font-headline"
+							aria-expanded$="[[isExpanded(openedORKSE)]]"
+							aria-controls="ORKSE"
+							on-tap="toggle" data-args="#ORKSE">
+								ОРКСЭ
+						</div>
+						<iron-collapse id="ORKSE"
+							tabindex="0"
+							opened="{{openedORKSE}}">
+								<div class="collapse-content shadow">
+									<template is="juicy-html"
+										content$="[[docData.ORKSE.text]]">
+									</template>
+								</div>
+						</iron-collapse>
+					</div>
+
+					<div class="accordeonBox">
+						<div class="accordeonHeader paper-font-headline"
+							aria-expanded$="[[isExpanded(openedVideo)]]"
+							aria-controls="video"
+							on-tap="toggle"
+							data-args="#video">
+								Видеоконференцсвязь
+						</div>
+						<iron-collapse id="video"
+							tabindex="0"
+							opened="{{openedVideo}}">
+								<div class="collapse-content shadow">
+									<template is="juicy-html"
+										content$="[[docData.video.text]]">
+									</template>
+								</div>
+						</iron-collapse>
+					</div>
+
+					<div class="accordeonBox">
+						<div class="accordeonHeader paper-font-headline"
+							aria-expanded$="[[isExpanded(openedOlympiad)]]"
+							aria-controls="olympiad"
+							on-tap="toggle" data-args="#olympiad">
+								Олимпиады
+						</div>
+						<iron-collapse id="olympiad"
+							tabindex="0"
+							opened="{{openedOlympiad}}">
+								<div class="collapse-content shadow">
+									<template is="juicy-html"
+										content$="[[docData.olympiad.text]]">
+									</template>
+								</div>
+						</iron-collapse>
+					</div>
+
+					<div class="accordeonBox">
+						<div class="accordeonHeader paper-font-headline"
+							aria-expanded$="[[isExpanded(openedMunicipal)]]"
+							aria-controls="municipal"
+							on-tap="toggle" data-args="#municipal">
+								Муниципальный обменный фонд
+						</div>
+						<iron-collapse id="municipal"
+							tabindex="0"
+							opened="{{openedMunicipal}}">
+								<div class="collapse-content shadow">
+									<template is="juicy-html"
+										content$="[[docData.municipal.text]]">
+									</template>
+								</div>
+						</iron-collapse>
+					</div>
+
+				</div>
+		</paper-card>
+
+	</template>
+<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 't-inspect-template',
+			toggle: function(e) {
+		    document.querySelector( e.target.getAttribute('data-args') ).toggle();
+		  },
+			isExpanded: function(opened) {
+				return String(opened);
+			}
+		});
+	})();
+	</script>
+</dom-module>

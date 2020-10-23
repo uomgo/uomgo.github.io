@@ -1,0 +1,88 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="x-about-slave">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+				word-wrap: break-word;
+			}
+			paper-material {
+				background-color: white;
+				border-radius: 0 0 8px 8px;
+			}
+			a.email {
+				display: block;
+			}
+			grid-element {
+				margin: 16px;
+			}
+			grid-col {
+				@apply(--layout-justified);
+				word-wrap: break-word;
+				text-align: center;
+			}
+		</style>
+
+		<firebase-document id="firebaseDocument"
+											 app-name="uomgo"
+											 path="/about/slave"
+											 data="{{docData}}"></firebase-document>
+
+		<firebase-query id="firebaseQuery"
+										path="/about/slave/table"
+										app-name="uomgo"
+										data="{{data}}"></firebase-query>
+
+		<paper-material class="content" elevation="4">
+
+			<template is="dom-repeat" items="[[data]]" as="val" target-framerate="60">
+				<grid-element ga="16px" center class="shadow">
+					<grid-col>
+						[[val.unit]]
+					</grid-col>
+					<grid-col s="2">
+						[[val.name]]
+					</grid-col>
+					<grid-col>
+						[[val.person]]
+					</grid-col>
+					<grid-col>
+						[[val.tel]]
+					</grid-col>
+					<grid-col id="email">
+						<a class="email" href="mailto:[[val.email]]">[[val.email]]</a>
+					</grid-col>
+				</grid-element>
+			</template>
+
+			<div>
+				<template is="juicy-html"
+									content$="[[docData.text]]"></template>
+			</div>
+
+		</paper-material>
+
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 'x-about-slave',
+			properties: {
+				data: {
+					type: Array,
+					value: [],
+				}
+			},
+			ready: function() {
+
+			},
+			linkMail: function(val) {
+				return "mailto:"+val;
+			}
+		});
+	})();
+	</script>
+</dom-module>

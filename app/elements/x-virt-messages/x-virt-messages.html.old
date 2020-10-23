@@ -1,0 +1,314 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="x-virt-messages">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+				word-wrap: break-word;
+				/*word-break: break-all;*/
+			}
+			paper-card {
+				width: 100%;
+				border-radius: 8px;
+				margin-bottom: 16px;
+				--paper-card-header-text: {
+					text-align: center;
+				};
+				--paper-card-content: {
+				};
+			}
+			paper-icon-button.edit {
+				/*--paper-icon-button-ink-color: white;*/
+				--paper-icon-button: {
+					width: 24px;
+					height: 24px;
+					background-color: white;
+					color: var(--paper-green-a700);
+					border-radius: 3px;
+					padding: 0px;
+				}
+				--paper-icon-button-hover: {
+					background-color: var(--paper-green-a400);
+					color: black;
+				}
+			}
+			paper-icon-button.delete {
+				/*--paper-icon-button-ink-color: black;*/
+				--paper-icon-button: {
+					width: 24px;
+					height: 24px;
+					background-color: white;
+					color: var(--paper-red-500);
+					border-radius: 3px;
+					padding: 0px;
+				}
+				--paper-icon-button-hover: {
+					background-color: var(--paper-red-500);
+					color: white;
+				}
+			}
+			#recaptcha {
+				margin-top: 16px;
+			}
+			#submit {
+				margin: 16px 0;
+			}
+		</style>
+
+		<firebase-document id="firebaseDocument"
+											 app-name="uomgo"></firebase-document>
+
+		<firebase-query id="firebaseQuery"
+										path="/virt/messages"
+										app-name="uomgo"
+										data="{{data}}"></firebase-query>
+
+		<template id="formDomIf" is="dom-if" if="[[!user]]" restamp>
+			<form is="iron-form" id="form">
+				<paper-card heading="Форма обращения" elevation="4">
+					<div class="card-content">
+
+							<paper-input name="firstname"
+													 label="Фамилия"
+													 required
+													 auto-validate></paper-input>
+
+							<paper-input name="secondname"
+													 label="Имя"
+													 required
+													 auto-validate></paper-input>
+
+							<paper-input name="lastname"
+													 label="Отчество"
+													 required
+													 auto-validate></paper-input>
+
+							<gold-email-input label="E-mail"
+																auto-validate
+																required></gold-email-input>
+
+							<paper-dropdown-menu label="Тема" selected-item-label="{{selected}}">
+									<paper-menu class="dropdown-content">
+											<template is="dom-repeat" items="[[themes]]" as="theme">
+													<paper-item>[[theme]]</paper-item>
+											</template>
+									</paper-menu>
+							</paper-dropdown-menu>
+
+							<input is="iron-input" name="theme" type="hidden" value$="[[selected]]">
+
+							<paper-textarea required
+															auto-validate
+															label="Текст обращения"></paper-textarea>
+
+							<re-captcha id="recaptcha"
+													sitekey="6LfvTSkTAAAAAJddQYrmqJZB81BILzdaOOKjGGSq"></re-captcha>
+					</div>
+
+					<div class="card-actions">
+						<paper-button id="submit" raised disabled="false">Отправить</paper-button>
+					</div>
+
+				</paper-card>
+			</form>
+		</template>
+
+		<div id="messages">
+			<template id="domRepeat"
+								is="dom-repeat"
+								items="[[data]]"
+								as="val"
+								sort="_computeSort"
+								target-framerate="60">
+
+				<paper-card heading="" elevation="4">
+					<div class="card-content">
+						<div class="element">
+							<grid-element ga="16px" center>
+								<grid-col>
+									Дата: <moment-js date="[[val.date]]" format="DD.MM.YYYYг."></moment-js>
+								</grid-col>
+								<grid-col>
+									Отправитель: [[val.name]]
+								</grid-col>
+								<grid-col>
+									Тема: [[val.theme]]
+								</grid-col>
+							</grid-element>
+							<grid-element ga="16px" center>
+								<grid-col>
+									[[val.text]]
+								</grid-col>
+							</grid-element>
+							<template id="replyDomIf" is="dom-if" if="[[val.reply]]">
+								<hr>
+								<grid-element ga="16px" center>
+									<grid-col>
+										<b>
+											<moment-js date="[[val.replyDate]]" format="DD.MM.YYYYг."></moment-js>
+										</b>
+									</grid-col>
+								</grid-element>
+								<grid-element class="textReply" hidden$="[[!val.reply]]" ga="16px" center>
+									<grid-col>
+										<b>[[val.reply]]</b>
+									</grid-col>
+								</grid-element>
+							</template>
+							<grid-element class="textReplyEdit" hidden ga="16px" center>
+								<grid-col>
+									<paper-textarea class="textarea" label="Ответ"></paper-textarea>
+								</grid-col>
+							</grid-element>
+						</div>
+					</div>
+					<template is="dom-if" if="[[user]]">
+					<div class="card-actions" hidden$="[[!user]]">
+						<div class="content layout horizontal wrap">
+
+							<paper-button class="saveButton"
+														raised
+														hidden
+														on-tap="save">
+								<iron-icon icon="check"></iron-icon>
+								<span>Ok!</span>
+							</paper-button>
+
+							<div class="spacer"></div>
+							<div class="buttonBox content layout horizontal center-center wrap">
+
+								<paper-icon-button class="edit"
+																	 icon="image:edit"
+																	 on-tap="edit"></paper-icon-button>
+
+								<paper-icon-button class="delete"
+																	 icon="delete"
+																	 on-tap=""></paper-icon-button>
+							</div>
+						</div>
+					</div>
+					</template>
+				</paper-card>
+
+			</template>
+		</div>
+
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 'x-virt-messages',
+			properties: {
+				data: {
+					type: Object
+				},
+				docData: {
+					type: Object
+				},
+				themes: {
+					type: Object,
+					readOnly: true,
+					value: ['Жалоба','Предложение','Благодарность','Прочее']
+				},
+				user: {
+					type: Object
+				},
+				hide: {
+					type: Boolean,
+					value: false
+				}
+			},
+			ready: function() {
+				var that = this;
+				var formDomIf = this.querySelector('#formDomIf');
+				var domRepeat = this.$.domRepeat;
+
+				formDomIf.addEventListener('dom-change', function(e) {
+					var element = e.srcElement.parentElement;
+					var recaptcha = element.$$('#recaptcha');
+					var submit = element.$$('#submit');
+					if (recaptcha) {
+						recaptcha.addEventListener('captcha-response', function(e) {
+							submit.disabled = false;
+						});
+						recaptcha.addEventListener('captcha-expired', function(e) {
+							submit.disabled = true;
+						});
+					};
+				});
+				this.docDataPath = "/virt/messages/3";
+			},
+			_computeSort: function(a, b) {
+				if (a.date == b.date) {
+					return 0;
+				}
+				return a.date > b.date ? -1 : 1;
+			},
+			edit: function(e) {
+				var parent = e.currentTarget.offsetParent.offsetParent;
+				var textReply = parent.querySelector('.textReply');
+				var textReplyEdit = parent.querySelector('.textReplyEdit');
+				var textarea = parent.querySelector('.textarea');
+				var saveButton = parent.querySelector('.saveButton');
+				var modelForElement = this.$.domRepeat.modelForElement(e.target);
+				if (textReply) {
+					textReply.hidden = true;
+				}
+				textarea.value = modelForElement.val.reply;
+				textReplyEdit.hidden = false;
+				saveButton.hidden = false;
+			},
+			save: function(e) {
+				var today = new Date();
+				var fireDoc = this.$.firebaseDocument;
+				var parent = e.currentTarget.offsetParent.offsetParent;
+				var textReply = parent.querySelector('.textReply');
+				var textReplyEdit = parent.querySelector('.textReplyEdit');
+				var textarea = parent.querySelector('.textarea');
+				var saveButton = parent.querySelector('.saveButton');
+				var modelForElement = domRepeat.modelForElement(e.target);
+				var val = modelForElement.val;
+				var key = val.$key;
+				fireDoc.path = null;
+				fireDoc.data = JSON.parse(JSON.stringify( val ));
+				delete fireDoc.data.$key;
+				if (textarea.value) {
+					fireDoc.data.reply = textarea.value;
+					if (!fireDoc.data.replyDate) {
+						fireDoc.data.replyDate = this._extractDate(today);
+					};
+				} else {
+					delete fireDoc.data.reply;
+					delete fireDoc.data.replyDate;
+				};
+				fireDoc.save('/virt/messages/', key);
+				textarea.value = "";
+				key = "";
+				if (textReply) {
+					textReply.hidden = false;
+				}
+				textReplyEdit.hidden = true;
+				saveButton.hidden = true;
+			},
+			_extractDate: function(val) {
+				var ret;
+				ret = val.getFullYear() + "-";
+				if (val.getMonth() < 10) {
+					ret += "0"+val.getMonth() + "-";
+				} else if (val.getMonth() > 9) {
+					ret += val.getMonth() + "-";
+				};
+				if (val.getDate() < 10) {
+					ret += "0"+val.getDate();
+				} else if (val.getDate() > 9) {
+					ret += val.getDate();
+				};
+				return ret;
+			}
+		});
+	})();
+	</script>
+</dom-module>

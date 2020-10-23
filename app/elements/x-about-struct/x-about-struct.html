@@ -1,0 +1,29 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="x-about-struct">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+				word-wrap: break-word;
+			}
+			paper-material {
+				background-color: white;
+				border-radius: 0 0 8px 8px;
+				min-height: 100vh;
+			}
+		</style>
+		<paper-material elevation="4" class="content">
+			<x-diag></x-diag>
+		</paper-material>
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 'x-about-struct'
+		});
+	})();
+	</script>
+</dom-module>

@@ -1,0 +1,147 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="t-diet-template">
+	<template>
+		<style is="custom-style" include="shared-styles">
+			:host {
+				display: block;
+				word-wrap: break-word;
+				/*word-break: break-all;*/
+			}
+			paper-card {
+				width: 100%;
+				border-radius: 8px;
+				--paper-card-header-text: {
+					text-align: center;
+				};
+				--paper-card-content: {
+				};
+			}
+			iron-collapse:focus {
+				outline: none;
+			}
+			.collapse-content {
+				padding: 15px;
+				background-color: white;
+			}
+			.accordeonHeader {
+				padding: 0 8px;
+				cursor: pointer;
+			}
+			.accordeonBox {
+				padding: 8px 0;
+				background-color: var(--paper-blue-grey-50);
+			}
+		</style>
+
+
+		<firebase-document id="firebaseDocument"
+			app-name="uomgo"
+			path="/sections/diet"
+			data="{{docData}}">
+		</firebase-document>
+
+		<paper-card
+			heading="МБУ Комбинат питания  МГО"
+			image=""
+			elevation="4"
+			animated-shadow="false">
+				<div class="card-content">
+
+					<div class="content">
+
+						<template is="juicy-html"	content$="[[docData.text]]"></template>
+
+						<div class="accordeonBox">
+							<div class="accordeonHeader paper-font-headline"
+								aria-expanded$="[[isExpanded(openedRegulatory)]]"
+								aria-controls="regulatory"
+								on-tap="toggle" data-args="#regulatory">
+									Положение о питании
+							</div>
+							<iron-collapse id="regulatory"
+								tabindex="0"
+								opened="{{openedRegulatory}}">
+									<div class="collapse-content shadow">
+										<template is="juicy-html"
+											content$="[[docData.regulatory.text]]">
+										</template>
+									</div>
+							</iron-collapse>
+						</div>
+
+						<div class="accordeonBox">
+							<div class="accordeonHeader paper-font-headline"
+								aria-expanded$="[[isExpanded(openedMenu)]]"
+								aria-controls="menu"
+								on-tap="toggle" data-args="#menu">
+									Школьное меню
+							</div>
+							<iron-collapse id="menu"
+								tabindex="0"
+								opened="{{openedMenu}}">
+									<div class="collapse-content shadow">
+										<template is="juicy-html"
+											content$="[[docData.menu.text]]">
+										</template>
+									</div>
+							</iron-collapse>
+						</div>
+
+						<div class="accordeonBox">
+							<div class="accordeonHeader paper-font-headline"
+								aria-expanded$="[[isExpanded(openedTechnology)]]"
+								aria-controls="technology"
+								on-tap="toggle" data-args="#technology">
+									Технология приготовления
+							</div>
+							<iron-collapse id="technology"
+								tabindex="0"
+								opened="{{openedTechnology}}">
+									<div class="collapse-content shadow">
+										<template is="juicy-html"
+											content$="[[docData.technology.text]]">
+										</template>
+									</div>
+							</iron-collapse>
+						</div>
+
+						<div class="accordeonBox">
+							<div class="accordeonHeader paper-font-headline"
+								aria-expanded$="[[isExpanded(openedHealthyEating)]]"
+								aria-controls="healthyEating"
+								on-tap="toggle" data-args="#healthyEating">
+									Здоровое питание
+							</div>
+							<iron-collapse id="healthyEating"
+								tabindex="0"
+								opened="{{openedHealthyEating}}">
+									<div class="collapse-content shadow">
+										<template is="juicy-html"
+											content$="[[docData.healthyEating.text]]">
+										</template>
+									</div>
+							</iron-collapse>
+						</div>
+
+					</div>
+				</div>
+		</paper-card>
+
+	</template>
+	<script>
+	(function() {
+		'use strict';
+
+		Polymer({
+			is: 't-diet-template',
+			toggle: function(e) {
+		    document.querySelector( e.target.getAttribute('data-args') ).toggle();
+		  },
+			isExpanded: function(opened) {
+				return String(opened);
+			}
+		});
+	})();
+	</script>
+</dom-module>
